@@ -1,5 +1,5 @@
 [package]
-name = "TwoMover3Pos"
+name = "two_mover_3_pos"
 version = "0.1.0"
 authors = ["Zax71 <zabax32@gmail.com>"]
 edition = "2021"

@@ -1,4 +1,4 @@
-# TwoMover3Pos
+# Two Mover 3 Pos
 
 A utility written in [Rust](https://www.rust-lang.org/) (yes, it's 🚀🚀🚀BLAZING FAST🚀🚀🚀) using [egui](https://www.egui.rs/) to position momoving head lights in 3D space on EOS v2 lighting desks.
 
