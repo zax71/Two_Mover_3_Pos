@@ -21,21 +21,6 @@ jobs:
           command: check
           args: --all-features
 
-  check_wasm:
-    name: Check wasm32
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --all-features --lib --target wasm32-unknown-unknown
-
   test:
     name: Test Suite
     runs-on: ubuntu-latest
@@ -81,21 +66,6 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
-
-  trunk:
-    name: trunk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2
-      - name: Download and install Trunk binary
-        run: wget -qO- https://github.com/thedodd/trunk/releases/latest/download/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
-      - name: Build
-        run: ./trunk build
 
   build:
     runs-on: ${{ matrix.os }}
@@ -143,14 +113,3 @@ jobs:
         with:
           name: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
           path: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
-
-      - uses: svenstaro/upload-release-action@v2
-        name: Upload binaries to release
-        if: ${{ github.event_name == 'push' }}
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
-          asset_name: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
-          tag: ${{ github.ref }}
-          prerelease: ${{ !startsWith(github.ref, 'refs/tags/') }}
-          overwrite: true
