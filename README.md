@@ -1,15 +1,15 @@
 # Two Mover 3 Pos
 
-A utility written in [Rust](https://www.rust-lang.org/) (yes, it's 🚀🚀🚀BLAZING FAST🚀🚀🚀) using [egui](https://www.egui.rs/) to position momoving head lights in 3D space on EOS v2 lighting desks.
+A utility written in [Rust](https://www.rust-lang.org/) (yes, it's 🚀🚀🚀BLAZING FAST🚀🚀🚀) using [egui](https://www.egui.rs/) to position moving head lights in 3D space on EOS v2 lighting desks.
 
 
 ## Why that name?
-The name came about form merging "EOS v**2** **mover** **3**D **pos**itioning"
+The name came about from merging "EOS v**2** **mover** **3**D **pos**itioning"
 
 ## Roadmap
 - [ ] V1
   - Take in coordinates of mover & line
-  - Export the numbers to manually type in to desk
+  - Export the numbers to manually type into the desk
 - [ ] V2
   - Automatically export cues to the desk using [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control)
 - [ ] V3
@@ -19,7 +19,7 @@ The name came about form merging "EOS v**2** **mover** **3**D **pos**itioning"
   - 3D preview of lighting paths
 ## Dev envirionment setup
 
-Run this project just like any other Rust project, with
+You can run this project just like any other Rust project with
 ```
 cargo run
 ```
