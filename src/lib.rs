@@ -1,7 +1,7 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
 mod app;
+mod app_component;
 mod light;
-mod wizard;
 
 pub use app::TemplateApp;

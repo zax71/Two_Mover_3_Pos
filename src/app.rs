@@ -1,5 +1,3 @@
-use crate::wizard
-
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize, Default)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -42,26 +40,29 @@ impl eframe::App for TemplateApp {
             // The top panel is often a good place for a menu bar:
 
             egui::menu::bar(ui, |ui| {
-                // NOTE: no File->Quit on web pages!
-                let is_web = cfg!(target_arch = "wasm32");
-                if !is_web {
-                    ui.menu_button("File", |ui| {
-                        if ui.button("Quit").clicked() {
-                            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                        }
-                    });
-                    ui.add_space(16.0);
-                }
+                ui.menu_button("File", |ui| {
+                    if ui.button("Quit").clicked() {
+                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                    }
+                });
 
-                egui::widgets::global_theme_preference_buttons(ui);
+                ui.menu_button("Theme", |ui| {
+                    egui::widgets::global_theme_preference_buttons(ui);
+                });
+
+                ui.menu_button("Add", |ui| {
+                    if ui.button("Light").clicked() {
+                        todo!("Implement adding lights");
+                    }
+
+                    if ui.button("Path").clicked() {
+                        todo!("Implement adding paths")
+                    }
+                });
             });
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-
-            wizard::new()
-
-
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                 powered_by_egui_and_eframe(ui);
                 egui::warn_if_debug_build(ui);
