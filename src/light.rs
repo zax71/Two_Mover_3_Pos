@@ -1,9 +1,10 @@
-use measurements::Angle;
 use vector3d::Vector3d;
 
+#[derive(Default)]
 pub struct Light {
-    coordinates: Vector3d<isize>,
-    minimum_beam: Angle,
-    maximum_beam: Angle,
-    name: String,
+    pub coordinates: Vector3d<isize>,
+    pub minimum_beam: u16,
+    pub maximum_beam: u16,
+    pub name: String,
+    pub address: usize,
 }

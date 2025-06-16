@@ -2,6 +2,8 @@
 
 mod app;
 mod app_component;
+mod components;
 mod light;
+mod windows;
 
-pub use app::TemplateApp;
+pub use app::App;

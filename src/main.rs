@@ -20,6 +20,6 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "eframe template",
         native_options,
-        Box::new(|cc| Ok(Box::new(two_mover_3_pos::TemplateApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(two_mover_3_pos::App::new(cc)))),
     )
 }
