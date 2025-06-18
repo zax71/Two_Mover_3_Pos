@@ -1,4 +1,4 @@
-use egui::DragValue;
+use egui::{DragValue, Layout};
 use serde::{Deserialize, Serialize};
 
 use crate::light::Light;
@@ -44,14 +44,19 @@ impl AddLightWindow {
                         ui.add(DragValue::new(&mut self.current_light.address));
                     });
                 });
+                ui.add_space(16.0);
 
-                if ui.button("Add").clicked() {
-                    open = false;
-                    Self::save();
-                }
-                if ui.button("Cancel").clicked() {
-                    open = false;
-                }
+                ui.horizontal(|ui| {
+                    if ui.button("Cancel").clicked() {
+                        open = false;
+                    }
+                    ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui.button("Add").clicked() {
+                            open = false;
+                            Self::save();
+                        }
+                    });
+                })
             });
 
         self.shown = open;
