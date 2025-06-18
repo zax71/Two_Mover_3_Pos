@@ -1,3 +1,6 @@
+use crate::components::add_light_window::AddLightWindow;
+use crate::light::Light;
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize, Default)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -7,6 +10,9 @@ pub struct App {
 
     #[serde(skip)] // This how you opt-out of serialization of a field
     value: f32,
+
+    pub current_light: Light,
+    add_light_window: AddLightWindow,
 }
 
 impl App {
@@ -21,7 +27,7 @@ impl App {
             return eframe::get_value(storage, eframe::APP_KEY).unwrap_or_default();
         }
 
-        Default::default()
+        Self::default()
     }
 }
 
@@ -52,7 +58,7 @@ impl eframe::App for App {
 
                 ui.menu_button("Add", |ui| {
                     if ui.button("Light").clicked() {
-                        todo!("Implement adding lights");
+                        self.add_light_window.shown = true
                     }
 
                     if ui.button("Path").clicked() {
@@ -61,6 +67,9 @@ impl eframe::App for App {
                 });
             });
         });
+
+        // Show the add light window
+        self.add_light_window.add(ctx);
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
