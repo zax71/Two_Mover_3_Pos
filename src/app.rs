@@ -1,18 +1,38 @@
+use std::fs;
+use std::ops::Add;
+
 use crate::components::add_light_window::AddLightWindow;
+use crate::db::{self, Database};
 use crate::light::Light;
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
-#[derive(serde::Deserialize, serde::Serialize, Default)]
+#[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct App {
-    // Example stuff:
-    label: String,
-
-    #[serde(skip)] // This how you opt-out of serialization of a field
-    value: f32,
-
     pub current_light: Light,
     add_light_window: AddLightWindow,
+
+    #[serde(skip)]
+    database: Database,
+}
+
+impl Default for App {
+    /// Initialize the `App` struct with it's default values
+    fn default() -> Self {
+        let mut db_path = dirs::data_dir().expect("Could not find OS data directory");
+        db_path.push("two_mover_3_pos");
+
+        fs::create_dir_all(&db_path).expect("Failed to create directories for database");
+
+        db_path.push("database");
+        db_path.set_extension("db");
+
+        Self {
+            current_light: Light::default(),
+            add_light_window: AddLightWindow::default(),
+            database: Database::new(db_path),
+        }
+    }
 }
 
 impl App {
@@ -27,7 +47,7 @@ impl App {
             return eframe::get_value(storage, eframe::APP_KEY).unwrap_or_default();
         }
 
-        Self::default()
+        Default::default()
     }
 }
 

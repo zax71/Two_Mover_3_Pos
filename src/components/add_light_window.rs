@@ -12,7 +12,7 @@ pub struct AddLightWindow {
 impl AddLightWindow {
     /// Writes the light to the specified Database
     fn save() {
-        todo!("Implement database")
+        todo!("Implement db")
     }
 
     /// Adds the light entry window to the UI. Must be shown by setting `Self.shown = true`
