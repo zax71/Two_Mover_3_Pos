@@ -40,7 +40,7 @@ impl Default for App {
         Self {
             current_light: Light::default(),
             add_light_window: AddLightWindow::new(),
-            global_state: global_state,
+            global_state,
         }
     }
 }
