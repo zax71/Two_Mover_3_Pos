@@ -3,12 +3,14 @@ use std::fs;
 use egui_notify::Toasts;
 
 use crate::components::add_light_window::AddLightWindow;
+use crate::components::menu_bar::MenuBar;
 use crate::db::Database;
 use crate::light::Light;
 
 pub struct GlobalState {
     pub database: Database,
     pub toasts: Toasts,
+    pub add_light_window_status: bool,
 }
 
 impl Default for GlobalState {
@@ -23,15 +25,17 @@ impl Default for GlobalState {
         Self {
             database: Database::new(db_path),
             toasts: Toasts::default(),
+            add_light_window_status: false,
         }
     }
 }
 
 pub struct App {
     pub current_light: Light,
-    add_light_window: AddLightWindow,
+    pub add_light_window: AddLightWindow,
     global_state: GlobalState,
 }
+
 impl Default for App {
     /// Initialize the `App` struct with it's default values
     fn default() -> Self {
@@ -58,36 +62,12 @@ impl eframe::App for App {
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            // The top panel is often a good place for a menu bar:
-
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                    }
-                });
-
-                ui.menu_button("Theme", |ui| {
-                    egui::widgets::global_theme_preference_buttons(ui);
-                });
-
-                ui.menu_button("Add", |ui| {
-                    if ui.button("Light").clicked() {
-                        self.add_light_window.shown = true;
-                        ui.close_menu();
-                    }
-
-                    if ui.button("Path").clicked() {
-                        todo!("Implement adding paths");
-                        //ui.close_menu();
-                    }
-                });
-            });
-        });
+        // Show menu bar
+        MenuBar::ui(ctx, &mut self.global_state);
 
         // Show the add light window
-        self.add_light_window.add(ctx, &mut self.global_state);
+        self.add_light_window.shown = self.global_state.add_light_window_status;
+        self.add_light_window.ui(ctx, &mut self.global_state);
 
         // Show toasts
         self.global_state.toasts.show(ctx);
@@ -104,7 +84,9 @@ impl eframe::App for App {
 fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing.x = 0.0;
-        ui.label("Powered by ");
+        ui.label("Made with ❤️ using");
+        ui.hyperlink_to("Rust", "https://www.rust-lang.org/");
+        ui.label(", ");
         ui.hyperlink_to("egui", "https://github.com/emilk/egui");
         ui.label(" and ");
         ui.hyperlink_to(
