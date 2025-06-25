@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::light::{self, Light};
+use crate::light::Light;
 
 use std::sync::LazyLock;
 

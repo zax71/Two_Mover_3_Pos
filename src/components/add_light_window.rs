@@ -1,6 +1,6 @@
 use egui::{DragValue, Layout};
 
-use crate::{app::GlobalState, db, light::Light};
+use crate::{app::GlobalState, light::Light};
 
 pub struct AddLightWindow {
     current_light: Light,

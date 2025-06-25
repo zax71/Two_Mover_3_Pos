@@ -80,7 +80,7 @@ impl eframe::App for App {
 
                     if ui.button("Path").clicked() {
                         todo!("Implement adding paths");
-                        ui.close_menu();
+                        //ui.close_menu();
                     }
                 });
             });
