@@ -1,15 +1,25 @@
 use egui::{DragValue, Layout};
 use serde::{Deserialize, Serialize};
 
-use crate::light::Light;
+use crate::{db::Database, light::Light};
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct AddLightWindow {
     current_light: Light,
     pub shown: bool,
+    
+    #[serde(skip)]
+    database: Database,
 }
 
 impl AddLightWindow {
+
+    pub fn new(database: Database) -> Self {
+        Self {
+            database,
+            ..Default::default()
+        }
+    }
     /// Writes the light to the specified Database
     fn save() {
         todo!("Implement db")
