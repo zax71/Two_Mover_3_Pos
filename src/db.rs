@@ -35,7 +35,7 @@ impl Database {
     }
 
     /// Add a light to the database
-    pub fn add_light(&self, light_to_add: Light) -> Result<()> {
+    pub fn add_light(&self, light_to_add: &Light) -> Result<()> {
         let sql_result = self.connection.execute(
             "INSERT INTO Lights (coordinate_x, coordinate_y, coordinate_z, minimum_beam, maximum_beam, name, address) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![

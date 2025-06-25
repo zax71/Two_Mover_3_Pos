@@ -1,32 +1,40 @@
 use egui::{DragValue, Layout};
-use serde::{Deserialize, Serialize};
 
-use crate::{db::Database, light::Light};
+use crate::{app::GlobalState, db, light::Light};
 
-#[derive(Default, Serialize, Deserialize)]
 pub struct AddLightWindow {
     current_light: Light,
     pub shown: bool,
-    
-    #[serde(skip)]
-    database: Database,
 }
 
 impl AddLightWindow {
-
-    pub fn new(database: Database) -> Self {
+    pub fn new() -> Self {
         Self {
-            database,
-            ..Default::default()
+            current_light: Light::default(),
+            shown: false,
         }
     }
     /// Writes the light to the specified Database
-    fn save() {
-        todo!("Implement db")
+    fn save(app_state: &mut GlobalState, adding_light: &Light) {
+        let db_result = app_state.database.add_light(adding_light);
+
+        match db_result {
+            Ok(_) => {
+                app_state
+                    .toasts
+                    .success(format!("Successfully added light {}", adding_light.name));
+            }
+
+            Err(err) => {
+                app_state
+                    .toasts
+                    .error(format!("Failed to write light to database: {}", err));
+            }
+        }
     }
 
     /// Adds the light entry window to the UI. Must be shown by setting `Self.shown = true`
-    pub fn add(&mut self, ctx: &egui::Context) {
+    pub fn add(&mut self, ctx: &egui::Context, app_state: &mut GlobalState) {
         let mut open = self.shown;
 
         egui::Window::new("Add light")
@@ -63,7 +71,7 @@ impl AddLightWindow {
                     ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.button("Add").clicked() {
                             open = false;
-                            Self::save();
+                            Self::save(app_state, &self.current_light);
                         }
                     });
                 })
