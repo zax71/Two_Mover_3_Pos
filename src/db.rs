@@ -4,7 +4,7 @@ use crate::light::Light;
 
 use std::sync::LazyLock;
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use include_dir::{include_dir, Dir};
 use rusqlite::{params, Connection};
 use rusqlite_migration::Migrations;
@@ -36,6 +36,9 @@ impl Database {
 
     /// Add a light to the database
     pub fn add_light(&self, light_to_add: &Light) -> Result<()> {
+        if light_to_add.empty() {
+            bail!("Light has default values");
+        }
         let sql_result = self.connection.execute(
             "INSERT INTO Lights (coordinate_x, coordinate_y, coordinate_z, minimum_beam, maximum_beam, name, address) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
