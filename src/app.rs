@@ -50,6 +50,32 @@ impl App {
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         Default::default()
     }
+
+    fn menu_bar(&mut self, ui: &mut egui::Ui) {
+        egui::menu::bar(ui, |ui| {
+            ui.menu_button("File", |ui| {
+                if ui.button("Quit").clicked() {
+                    ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
+                }
+            });
+
+            ui.menu_button("Theme", |ui| {
+                egui::widgets::global_theme_preference_buttons(ui);
+            });
+
+            ui.menu_button("Add", |ui| {
+                if ui.button("Light").clicked() {
+                    self.add_light_window.shown = true;
+                    ui.close_menu();
+                }
+
+                if ui.button("Path").clicked() {
+                    todo!("Implement adding paths");
+                    //ui.close_menu();
+                }
+            });
+        });
+    }
 }
 
 impl eframe::App for App {
@@ -60,30 +86,7 @@ impl eframe::App for App {
 
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
-
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                    }
-                });
-
-                ui.menu_button("Theme", |ui| {
-                    egui::widgets::global_theme_preference_buttons(ui);
-                });
-
-                ui.menu_button("Add", |ui| {
-                    if ui.button("Light").clicked() {
-                        self.add_light_window.shown = true;
-                        ui.close_menu();
-                    }
-
-                    if ui.button("Path").clicked() {
-                        todo!("Implement adding paths");
-                        //ui.close_menu();
-                    }
-                });
-            });
+            self.menu_bar(ui);
         });
 
         // Show the add light window
