@@ -34,7 +34,7 @@ impl AddLightWindow {
     }
 
     /// Adds the light entry window to the UI. Must be shown by setting `Self.shown = true`
-    pub fn ui(&mut self, ctx: &egui::Context, app_state: &mut GlobalState) {
+    pub fn add(&mut self, ctx: &egui::Context, app_state: &mut GlobalState) {
         let mut open = self.shown;
 
         egui::Window::new("Add light")
