@@ -40,8 +40,8 @@ impl Path for CubicBezier {
             end: self.end,
         };
 
-        bezier_2.point_at(&index)
-            + (bezier_1.point_at(&index) - bezier_2.point_at(&index)) * index.value()
+        bezier_2.point_at(index)
+            + (bezier_1.point_at(index) - bezier_2.point_at(index)) * index.value()
     }
 }
 
