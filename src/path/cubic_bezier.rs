@@ -1,3 +1,4 @@
+use isx::prelude::IsDefault;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
@@ -7,6 +8,12 @@ use crate::path::{bezier::Bezier, Path};
 pub struct NamedCubicBezier {
     pub name: String,
     pub cubic_bezier: CubicBezier,
+}
+
+impl IsDefault for NamedCubicBezier {
+    fn is_default(&self) -> bool {
+        *self == Self::default()
+    }
 }
 
 #[derive(Debug, Default, PartialEq)]

@@ -1,3 +1,4 @@
+use isx::prelude::IsDefault;
 use serde::{Deserialize, Serialize};
 use vector3d::Vector3d;
 
@@ -10,10 +11,8 @@ pub struct Light {
     pub address: usize,
 }
 
-impl Light {
-    /// Returns true if the light is at it's default values (hence, empty)
-    pub fn empty(&self) -> bool {
-        // Needs the * to copy the value as the pointer is not the same as the real value
+impl IsDefault for Light {
+    fn is_default(&self) -> bool {
         *self == Self::default()
     }
 }

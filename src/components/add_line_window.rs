@@ -1,10 +1,6 @@
-use egui::{DragValue, Layout};
+use egui::Layout;
 
-use crate::{
-    app::GlobalState,
-    components::select_vec,
-    path::line::{Line, NamedLine},
-};
+use crate::{app::GlobalState, components::select_vec, path::line::NamedLine};
 
 pub struct AddLineWindow {
     current_line: NamedLine,

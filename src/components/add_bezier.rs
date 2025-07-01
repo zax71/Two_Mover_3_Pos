@@ -1,4 +1,4 @@
-use egui::{DragValue, Layout};
+use egui::Layout;
 
 use crate::{app::GlobalState, components::select_vec, path::bezier::NamedBezier};
 

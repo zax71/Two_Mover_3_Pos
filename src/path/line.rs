@@ -1,4 +1,5 @@
 use crate::path::Path;
+use isx::prelude::IsDefault;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
@@ -6,6 +7,12 @@ use vector3d::Vector3d;
 pub struct NamedLine {
     pub name: String,
     pub line: Line,
+}
+
+impl IsDefault for NamedLine {
+    fn is_default(&self) -> bool {
+        *self == Self::default()
+    }
 }
 
 #[derive(Debug, Default, PartialEq)]

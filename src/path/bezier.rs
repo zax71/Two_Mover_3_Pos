@@ -1,3 +1,4 @@
+use isx::prelude::IsDefault;
 use vector3d::Vector3d;
 
 use crate::path::Path;
@@ -6,6 +7,12 @@ use crate::path::Path;
 pub struct NamedBezier {
     pub name: String,
     pub bezier: Bezier,
+}
+
+impl IsDefault for NamedBezier {
+    fn is_default(&self) -> bool {
+        *self == Self::default()
+    }
 }
 
 #[derive(Debug, Default, PartialEq)]

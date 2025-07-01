@@ -7,8 +7,9 @@ use crate::{
 
 use std::sync::LazyLock;
 
-use anyhow::{bail, Result};
+use anyhow::{bail, Ok, Result};
 use include_dir::{include_dir, Dir};
+use isx::prelude::IsDefault;
 use rusqlite::{params, Connection};
 use rusqlite_migration::Migrations;
 
@@ -31,7 +32,7 @@ impl Database {
         // Update the database schema
         MIGRATIONS
             .to_latest(&mut conn)
-            .expect("Failed to update db schema");
+            .expect("Failed to apply db migrations");
 
         // Create the object
         Self { connection: conn }
@@ -39,10 +40,11 @@ impl Database {
 
     /// Add a light to the database
     pub fn add_light(&self, light_to_add: &Light) -> Result<()> {
-        if light_to_add.empty() {
+        if light_to_add.is_default() {
             bail!("Light has default values");
         }
-        let sql_result = self.connection.execute(
+
+        self.connection.execute(
             "INSERT INTO Lights (coordinate_x, coordinate_y, coordinate_z, minimum_beam, maximum_beam, name, address) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
                 light_to_add.coordinates.x,
@@ -52,27 +54,83 @@ impl Database {
                 light_to_add.maximum_beam,
                 light_to_add.name,
                 light_to_add.address,
-                ]);
+                ])?;
 
-        // Error handling
-        match sql_result {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err.into()),
-        }
+        Ok(())
     }
 
     /// Add a named line to the database
     pub fn add_line(&self, line_to_add: &NamedLine) -> Result<()> {
-        todo!("Implement add line to database")
+        if line_to_add.is_default() {
+            bail!("Line has default values");
+        }
+
+        self.connection.execute(
+            "INSERT INTO Lines (start_x, start_y, start_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            params![
+                line_to_add.line.start.x,
+                line_to_add.line.start.y,
+                line_to_add.line.start.z,
+                line_to_add.line.end.x,
+                line_to_add.line.end.y,
+                line_to_add.line.end.z,
+                line_to_add.name,
+            ],
+        )?;
+
+        Ok(())
     }
 
     /// Add a named bezier to the database
     pub fn add_bezier(&self, bezier_to_add: &NamedBezier) -> Result<()> {
-        todo!("Implement add bezier to database")
+        if bezier_to_add.is_default() {
+            bail!("Bezier curve has default values");
+        }
+
+        self.connection.execute(
+            "INSERT INTO BezierCurves (start_x, start_y, start_z, midpoint_x, midpoint_y, midpoint_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+            params![
+                bezier_to_add.bezier.start.x,
+                bezier_to_add.bezier.start.y,
+                bezier_to_add.bezier.start.z,
+                bezier_to_add.bezier.midpoint.x,
+                bezier_to_add.bezier.midpoint.y,
+                bezier_to_add.bezier.midpoint.z,
+                bezier_to_add.bezier.end.x,
+                bezier_to_add.bezier.end.y,
+                bezier_to_add.bezier.end.z,
+                bezier_to_add.name,
+            ],
+        )?;
+
+        Ok(())
     }
 
     /// Add a named cubic bezier to the database
     pub fn add_cubic_bezier(&self, cubic_bezier_to_add: &NamedCubicBezier) -> Result<()> {
-        todo!("Implement add cubic bezier to database")
+        if cubic_bezier_to_add.is_default() {
+            bail!("Cubic bezier curve has default values");
+        }
+
+        self.connection.execute(
+            "INSERT INTO CubicBezierCurves (start_x, start_y, start_z, end_x, end_y, end_z, handle_1_x, handle_1_y, handle_1_z, handle_2_x, handle_2_y, handle_2_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+            params![
+                cubic_bezier_to_add.cubic_bezier.start.x,
+                cubic_bezier_to_add.cubic_bezier.start.y,
+                cubic_bezier_to_add.cubic_bezier.start.z,
+                cubic_bezier_to_add.cubic_bezier.end.x,
+                cubic_bezier_to_add.cubic_bezier.end.y,
+                cubic_bezier_to_add.cubic_bezier.end.z,
+                cubic_bezier_to_add.cubic_bezier.handle_1.x,
+                cubic_bezier_to_add.cubic_bezier.handle_1.y,
+                cubic_bezier_to_add.cubic_bezier.handle_1.z,
+                cubic_bezier_to_add.cubic_bezier.handle_2.x,
+                cubic_bezier_to_add.cubic_bezier.handle_2.y,
+                cubic_bezier_to_add.cubic_bezier.handle_2.z,
+                cubic_bezier_to_add.name,
+            ]
+        )?;
+
+        Ok(())
     }
 }

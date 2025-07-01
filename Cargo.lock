@@ -1655,6 +1655,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7943c866cc5cd64cbc25b2e01621d07fa8eb2a1a23160ee81ce38704e97b8ecf"
 
 [[package]]
+name = "isx"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ca467ef1cd39e7a2864546efe3abd577e6a226471fbc39ff9112f08d2bd12a1d"
+
+[[package]]
 name = "jiff"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3156,6 +3162,7 @@ dependencies = [
  "egui-notify",
  "env_logger",
  "include_dir",
+ "isx",
  "log",
  "measurements",
  "percentage",

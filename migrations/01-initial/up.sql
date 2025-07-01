@@ -7,4 +7,4 @@ CREATE TABLE Lights (
   maximum_beam INTEGER,
   name varchar(255),
   address INTEGER
-)
+);
