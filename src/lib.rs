@@ -4,5 +4,6 @@ mod app;
 mod components;
 mod db;
 mod light;
+mod path;
 
 pub use app::App;
