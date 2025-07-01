@@ -78,7 +78,7 @@ impl AddLightWindow {
             });
 
         // Support using the close button defined with `.open()` above
-        if self.shown == true {
+        if self.shown {
             self.shown = open;
         }
     }
