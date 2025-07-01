@@ -3,6 +3,12 @@ use vector3d::Vector3d;
 use crate::path::Path;
 
 #[derive(Debug, Default, PartialEq)]
+pub struct NamedBezier {
+    pub name: String,
+    pub bezier: Bezier,
+}
+
+#[derive(Debug, Default, PartialEq)]
 pub struct Bezier {
     pub start: Vector3d<f64>,
     pub midpoint: Vector3d<f64>,

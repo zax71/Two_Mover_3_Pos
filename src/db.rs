@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 
-use crate::light::Light;
+use crate::{
+    light::Light,
+    path::{bezier::NamedBezier, cubic_bezier::NamedCubicBezier, line::NamedLine},
+};
 
 use std::sync::LazyLock;
 
@@ -56,5 +59,20 @@ impl Database {
             Ok(_) => Ok(()),
             Err(err) => Err(err.into()),
         }
+    }
+
+    /// Add a named line to the database
+    pub fn add_line(&self, line_to_add: &NamedLine) -> Result<()> {
+        todo!("Implement add line to database")
+    }
+
+    /// Add a named bezier to the database
+    pub fn add_bezier(&self, bezier_to_add: &NamedBezier) -> Result<()> {
+        todo!("Implement add bezier to database")
+    }
+
+    /// Add a named cubic bezier to the database
+    pub fn add_cubic_bezier(&self, cubic_bezier_to_add: &NamedCubicBezier) -> Result<()> {
+        todo!("Implement add cubic bezier to database")
     }
 }

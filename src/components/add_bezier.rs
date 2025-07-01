@@ -1,34 +1,35 @@
 use egui::{DragValue, Layout};
 
-use crate::{app::GlobalState, components::select_vec, light::Light};
+use crate::{app::GlobalState, components::select_vec, path::bezier::NamedBezier};
 
-pub struct AddLightWindow {
-    current_light: Light,
+pub struct AddBezierWindow {
+    current_line: NamedBezier,
     pub shown: bool,
 }
 
-impl AddLightWindow {
+impl AddBezierWindow {
     pub fn new() -> Self {
         Self {
-            current_light: Light::default(),
+            current_line: NamedBezier::default(),
             shown: false,
         }
     }
-    /// Writes the light to the specified Database
-    fn save(app_state: &mut GlobalState, adding_light: &Light) {
-        let db_result = app_state.database.add_light(adding_light);
+    /// Writes the line to the specified Database
+    fn save(app_state: &mut GlobalState, adding_bezier: &NamedBezier) {
+        let db_result = app_state.database.add_bezier(adding_bezier);
 
         match db_result {
             Ok(_) => {
-                app_state
-                    .toasts
-                    .success(format!("Successfully added light {}", adding_light.name));
+                app_state.toasts.success(format!(
+                    "Successfully added a new Bezier curve: {}",
+                    adding_bezier.name
+                ));
             }
 
             Err(err) => {
                 app_state
                     .toasts
-                    .error(format!("Failed to write light to database: {}", err));
+                    .error(format!("Failed to write Bezier curve to database: {}", err));
             }
         }
     }
@@ -37,7 +38,7 @@ impl AddLightWindow {
     pub fn add(&mut self, ctx: &egui::Context, app_state: &mut GlobalState) {
         let mut open = self.shown;
 
-        egui::Window::new("Add light")
+        egui::Window::new("Add bezier")
             .collapsible(false)
             .resizable(true)
             .fade_in(true)
@@ -45,17 +46,13 @@ impl AddLightWindow {
             .open(&mut self.shown)
             .show(ctx, |ui| {
                 ui.vertical(|ui| {
-                    select_vec(ui, "Position: ", &mut self.current_light.coordinates);
-
                     ui.horizontal(|ui| {
                         ui.label("Name:");
-                        ui.text_edit_singleline(&mut self.current_light.name);
+                        ui.text_edit_singleline(&mut self.current_line.name);
                     });
-
-                    ui.horizontal(|ui| {
-                        ui.label("Address:");
-                        ui.add(DragValue::new(&mut self.current_light.address));
-                    });
+                    select_vec(ui, "Start position: ", &mut self.current_line.bezier.start);
+                    select_vec(ui, "Midpoint: ", &mut self.current_line.bezier.midpoint);
+                    select_vec(ui, "End position: ", &mut self.current_line.bezier.end);
                 });
                 ui.add_space(16.0);
 
@@ -66,7 +63,7 @@ impl AddLightWindow {
                     ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.button("Add").clicked() {
                             open = false;
-                            Self::save(app_state, &self.current_light);
+                            Self::save(app_state, &self.current_line);
                         }
                     });
                 })

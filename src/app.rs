@@ -2,7 +2,10 @@ use std::fs;
 
 use egui_notify::Toasts;
 
+use crate::components::add_bezier::AddBezierWindow;
+use crate::components::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_light_window::AddLightWindow;
+use crate::components::add_line_window::AddLineWindow;
 use crate::db::Database;
 use crate::light::Light;
 
@@ -30,6 +33,9 @@ impl Default for GlobalState {
 pub struct App {
     pub current_light: Light,
     add_light_window: AddLightWindow,
+    add_line_window: AddLineWindow,
+    add_bezier_window: AddBezierWindow,
+    add_cubic_bezier_window: AddCubicBezierWindow,
     global_state: GlobalState,
 }
 impl Default for App {
@@ -40,6 +46,9 @@ impl Default for App {
         Self {
             current_light: Light::default(),
             add_light_window: AddLightWindow::new(),
+            add_line_window: AddLineWindow::new(),
+            add_bezier_window: AddBezierWindow::new(),
+            add_cubic_bezier_window: AddCubicBezierWindow::new(),
             global_state,
         }
     }
@@ -69,10 +78,20 @@ impl App {
                     ui.close_menu();
                 }
 
-                if ui.button("Path").clicked() {
-                    todo!("Implement adding paths");
-                    //ui.close_menu();
-                }
+                ui.menu_button("Path", |ui| {
+                    if ui.button("Line").clicked() {
+                        self.add_line_window.shown = true;
+                        ui.close_menu();
+                    }
+                    if ui.button("Bezier curve").clicked() {
+                        self.add_bezier_window.shown = true;
+                        ui.close_menu();
+                    }
+                    if ui.button("Cubic Bezier").clicked() {
+                        self.add_cubic_bezier_window.shown = true;
+                        ui.close_menu();
+                    }
+                });
             });
         });
     }
@@ -89,8 +108,12 @@ impl eframe::App for App {
             self.menu_bar(ui);
         });
 
-        // Show the add light window
+        // Show the windows
         self.add_light_window.add(ctx, &mut self.global_state);
+        self.add_line_window.add(ctx, &mut self.global_state);
+        self.add_bezier_window.add(ctx, &mut self.global_state);
+        self.add_cubic_bezier_window
+            .add(ctx, &mut self.global_state);
 
         // Show toasts
         self.global_state.toasts.show(ctx);
