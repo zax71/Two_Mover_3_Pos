@@ -29,7 +29,7 @@ impl AddLineWindow {
             Err(err) => {
                 app_state
                     .toasts
-                    .error(format!("Failed to write line to database: {}", err));
+                    .error(format!("Failed to write line to database: {err}"));
             }
         }
     }

@@ -28,7 +28,7 @@ impl AddLightWindow {
             Err(err) => {
                 app_state
                     .toasts
-                    .error(format!("Failed to write light to database: {}", err));
+                    .error(format!("Failed to write light to database: {err}"));
             }
         }
     }
