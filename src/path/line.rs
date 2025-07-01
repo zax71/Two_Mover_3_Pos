@@ -9,12 +9,76 @@ pub struct Line {
 
 impl Path for Line {
     fn point_at(&self, index: PercentageDecimal) -> Vector3d<f64> {
-        // It's easier to work with our index as a vector
-        let index_as_vector: Vector3d<f64> =
-            Vector3d::new(index.value(), index.value(), index.value());
-
-        // In the maths world, multiplying each value in a vector with the same value in another is called the "cross product"
         // See https://www.desmos.com/calculator/tiwsdtcsfy for a more readable version of this
-        index_as_vector.cross(self.end - self.start) + self.start
+        self.start + (self.end - self.start) * index.value()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use percentage::Percentage;
+
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_point_begin() {
+        let start = Vector3d {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        let end = Vector3d {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
+
+        let path = Line { start, end };
+
+        assert_eq!(path.point_at(Percentage::from_decimal(0.0)), start)
+    }
+
+    #[test]
+    fn test_point_end() {
+        let start = Vector3d {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        let end = Vector3d {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
+
+        let path = Line { start, end };
+
+        assert_eq!(path.point_at(Percentage::from_decimal(1.0)), end)
+    }
+
+    #[test]
+    fn test_point_middle() {
+        let start = Vector3d {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        let end = Vector3d {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
+
+        let path = Line { start, end };
+
+        assert_eq!(
+            path.point_at(Percentage::from_decimal(0.5)),
+            Vector3d {
+                x: 0.5,
+                y: 0.5,
+                z: 0.5
+            }
+        )
     }
 }
