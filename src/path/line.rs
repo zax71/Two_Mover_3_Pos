@@ -2,6 +2,7 @@ use crate::path::Path;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
+#[derive(Debug, Default)]
 pub struct Line {
     pub start: Vector3d<f64>,
     pub end: Vector3d<f64>,

@@ -3,6 +3,7 @@ use vector3d::Vector3d;
 
 use crate::path::{bezier::Bezier, Path};
 
+#[derive(Debug, Default, PartialEq)]
 pub struct CubicBezier {
     pub start: Vector3d<f64>,
     pub end: Vector3d<f64>,
