@@ -28,8 +28,7 @@ impl AddCubicBezierWindow {
 
             Err(err) => {
                 app_state.toasts.error(format!(
-                    "Failed to write cubic Bezier curve to database: {}",
-                    err
+                    "Failed to write cubic Bezier curve to database: {err}"
                 ));
             }
         }

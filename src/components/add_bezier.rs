@@ -29,7 +29,7 @@ impl AddBezierWindow {
             Err(err) => {
                 app_state
                     .toasts
-                    .error(format!("Failed to write Bezier curve to database: {}", err));
+                    .error(format!("Failed to write Bezier curve to database: {err}"));
             }
         }
     }
