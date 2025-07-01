@@ -3,12 +3,12 @@ use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
 pub struct Line {
-    start: Vector3d<f64>,
-    end: Vector3d<f64>,
+    pub start: Vector3d<f64>,
+    pub end: Vector3d<f64>,
 }
 
 impl Path for Line {
-    fn point_at(&self, index: PercentageDecimal) -> Vector3d<f64> {
+    fn point_at(&self, index: &PercentageDecimal) -> Vector3d<f64> {
         // See https://www.desmos.com/calculator/tiwsdtcsfy for a more readable version of this
         self.start + (self.end - self.start) * index.value()
     }
@@ -36,7 +36,7 @@ mod tests {
 
         let path = Line { start, end };
 
-        assert_eq!(path.point_at(Percentage::from_decimal(0.0)), start)
+        assert_eq!(path.point_at(&Percentage::from_decimal(0.0)), start)
     }
 
     #[test]
@@ -54,7 +54,7 @@ mod tests {
 
         let path = Line { start, end };
 
-        assert_eq!(path.point_at(Percentage::from_decimal(1.0)), end)
+        assert_eq!(path.point_at(&Percentage::from_decimal(1.0)), end)
     }
 
     #[test]
@@ -73,7 +73,7 @@ mod tests {
         let path = Line { start, end };
 
         assert_eq!(
-            path.point_at(Percentage::from_decimal(0.5)),
+            path.point_at(&Percentage::from_decimal(0.5)),
             Vector3d {
                 x: 0.5,
                 y: 0.5,

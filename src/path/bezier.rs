@@ -3,13 +3,13 @@ use vector3d::Vector3d;
 use crate::path::Path;
 
 pub struct Bezier {
-    start: Vector3d<f64>,
-    midpoint: Vector3d<f64>,
-    end: Vector3d<f64>,
+    pub start: Vector3d<f64>,
+    pub midpoint: Vector3d<f64>,
+    pub end: Vector3d<f64>,
 }
 
 impl Path for Bezier {
-    fn point_at(&self, index: percentage::PercentageDecimal) -> Vector3d<f64> {
+    fn point_at(&self, index: &percentage::PercentageDecimal) -> Vector3d<f64> {
         // See https://www.desmos.com/calculator/083535c5a3 for an easier to follow version of this,
         // The short of it is, you find the "index" point between the two end points (treating them as lines) and find the point at "index" along that line
         let start_line_point = self.midpoint + (self.end - self.midpoint) * index.value();
@@ -50,7 +50,7 @@ mod tests {
             end,
         };
 
-        assert_eq!(path.point_at(Percentage::from_decimal(0.0)), start)
+        assert_eq!(path.point_at(&Percentage::from_decimal(0.0)), start)
     }
 
     #[test]
@@ -76,7 +76,7 @@ mod tests {
             end,
         };
 
-        assert_eq!(path.point_at(Percentage::from_decimal(1.0)), end)
+        assert_eq!(path.point_at(&Percentage::from_decimal(1.0)), end)
     }
 
     #[test]
@@ -103,7 +103,7 @@ mod tests {
         };
 
         assert_eq!(
-            path.point_at(Percentage::from_decimal(0.5)),
+            path.point_at(&Percentage::from_decimal(0.5)),
             Vector3d {
                 x: 1.0,
                 y: 1.0,
