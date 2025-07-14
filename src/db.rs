@@ -7,11 +7,12 @@ use crate::{
 
 use std::sync::LazyLock;
 
-use anyhow::{bail, Ok, Result};
+use anyhow::{bail, Result};
 use include_dir::{include_dir, Dir};
 use isx::prelude::IsDefault;
 use rusqlite::{params, Connection};
 use rusqlite_migration::Migrations;
+use vector3d::Vector3d;
 
 static MIGRATIONS_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/migrations");
 
@@ -57,6 +58,22 @@ impl Database {
                 ])?;
 
         Ok(())
+    }
+
+    pub fn get_lights(&self) -> Result<Vec<Light>> {
+        let mut statement = self.connection.prepare("SELECT * FROM Lights")?;
+
+        let light_iterator = statement.query_map([], |row| {
+            Ok(Light {
+                coordinates: Vector3d::new(row.get(1)?, row.get(2)?, row.get(3)?),
+                minimum_beam: row.get(4)?,
+                maximum_beam: row.get(5)?,
+                name: row.get(6)?,
+                address: row.get(7)?,
+            })
+        })?;
+
+        Ok(light_iterator.collect::<Result<Vec<_>, _>>()?)
     }
 
     /// Add a named line to the database

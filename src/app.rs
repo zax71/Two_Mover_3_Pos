@@ -6,6 +6,7 @@ use crate::components::add_bezier::AddBezierWindow;
 use crate::components::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_light_window::AddLightWindow;
 use crate::components::add_line_window::AddLineWindow;
+use crate::components::output_section::OutputSection;
 use crate::db::Database;
 use crate::light::Light;
 
@@ -36,6 +37,7 @@ pub struct App {
     add_line_window: AddLineWindow,
     add_bezier_window: AddBezierWindow,
     add_cubic_bezier_window: AddCubicBezierWindow,
+    output_section: OutputSection,
     global_state: GlobalState,
 }
 impl Default for App {
@@ -49,6 +51,7 @@ impl Default for App {
             add_line_window: AddLineWindow::new(),
             add_bezier_window: AddBezierWindow::new(),
             add_cubic_bezier_window: AddCubicBezierWindow::new(),
+            output_section: OutputSection::new(global_state.database.get_lights().unwrap()),
             global_state,
         }
     }
@@ -103,11 +106,6 @@ impl eframe::App for App {
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            // The top panel is often a good place for a menu bar:
-            self.menu_bar(ui);
-        });
-
         // Show the windows
         self.add_light_window.add(ctx, &mut self.global_state);
         self.add_line_window.add(ctx, &mut self.global_state);
@@ -118,6 +116,16 @@ impl eframe::App for App {
         // Show toasts
         self.global_state.toasts.show(ctx);
 
+        // Show menu bar
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+            self.menu_bar(ui);
+        });
+
+        egui::SidePanel::right("output").show(ctx, |ui| {
+            self.output_section.add(ui);
+        });
+
+        // Boast about being written in egui
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                 powered_by_egui_and_eframe(ui);

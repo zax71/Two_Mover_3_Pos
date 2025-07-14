@@ -6,6 +6,7 @@ pub mod add_cubic_bezier;
 pub mod add_light_window;
 pub mod add_line_window;
 pub mod app_component;
+pub mod output_section;
 
 /// Displays a component with three input boxes for x,y,z coordinates
 pub fn select_vec(ui: &mut egui::Ui, name: &str, selecting_vec: &mut Vector3d<f64>) {

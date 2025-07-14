@@ -5,8 +5,7 @@ use eframe::egui::Ui;
 /// Used by any widget/component
 pub trait AppComponent {
     // Make Context generic, due to how
-    type Context;
 
     #[allow(unused)]
-    fn add(ctx: &mut Self::Context, ui: &mut Ui) {}
+    fn add(&self, ctx: &mut egui::Context, ui: &mut Ui) {}
 }
