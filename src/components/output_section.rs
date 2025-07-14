@@ -21,10 +21,7 @@ impl ToggleableLight {
 impl OutputSection {
     pub fn new(lights: Vec<Light>) -> Self {
         // Convert the Vec<Light> to Vec<ToggleableLight> with the toggle set to false
-        let toggleable_lights = lights
-            .iter()
-            .map(|light| ToggleableLight::from_light(light))
-            .collect();
+        let toggleable_lights = lights.iter().map(ToggleableLight::from_light).collect();
 
         Self { toggleable_lights }
     }
