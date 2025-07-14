@@ -18,7 +18,7 @@ fn main() -> eframe::Result {
         ..Default::default()
     };
     eframe::run_native(
-        "eframe template",
+        "Two Mover 3 Pos",
         native_options,
         Box::new(|cc| Ok(Box::new(two_mover_3_pos::App::new(cc)))),
     )
