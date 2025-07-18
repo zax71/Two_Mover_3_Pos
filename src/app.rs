@@ -64,7 +64,7 @@ impl App {
     }
 
     fn menu_bar(&mut self, ui: &mut egui::Ui) {
-        egui::menu::bar(ui, |ui| {
+        egui::MenuBar::new().ui(ui, |ui| {
             ui.menu_button("File", |ui| {
                 if ui.button("Quit").clicked() {
                     ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
@@ -78,21 +78,21 @@ impl App {
             ui.menu_button("Add", |ui| {
                 if ui.button("Light").clicked() {
                     self.add_light_window.shown = true;
-                    ui.close_menu();
+                    ui.close();
                 }
 
                 ui.menu_button("Path", |ui| {
                     if ui.button("Line").clicked() {
                         self.add_line_window.shown = true;
-                        ui.close_menu();
+                        ui.close();
                     }
                     if ui.button("Bezier curve").clicked() {
                         self.add_bezier_window.shown = true;
-                        ui.close_menu();
+                        ui.close();
                     }
                     if ui.button("Cubic Bezier").clicked() {
                         self.add_cubic_bezier_window.shown = true;
-                        ui.close_menu();
+                        ui.close();
                     }
                 });
             });
