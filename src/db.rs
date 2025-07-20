@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::Mutex};
 
 use crate::{
     light::Light,
@@ -22,7 +22,8 @@ static MIGRATIONS: LazyLock<Migrations<'static>> = LazyLock::new(|| {
 });
 
 pub struct Database {
-    connection: Connection,
+    // Mutex (Mutually exclusive) added due to the async access in another function.
+    pub connection: Mutex<Connection>,
 }
 
 impl Database {
@@ -36,7 +37,9 @@ impl Database {
             .expect("Failed to apply db migrations");
 
         // Create the object
-        Self { connection: conn }
+        Self {
+            connection: Mutex::new(conn),
+        }
     }
 
     /// Add a light to the database
@@ -45,7 +48,9 @@ impl Database {
             bail!("Light has default values");
         }
 
-        self.connection.execute(
+        let conn = self.connection.lock().unwrap();
+
+        conn.execute(
             "INSERT INTO Lights (coordinate_x, coordinate_y, coordinate_z, minimum_beam, maximum_beam, name, address) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
                 light_to_add.coordinates.x,
@@ -61,7 +66,8 @@ impl Database {
     }
 
     pub fn get_lights(&self) -> Result<Vec<Light>> {
-        let mut statement = self.connection.prepare("SELECT * FROM Lights")?;
+        let conn = self.connection.lock().unwrap();
+        let mut statement = conn.prepare("SELECT * FROM Lights")?;
 
         let light_iterator = statement.query_map([], |row| {
             Ok(Light {
@@ -82,7 +88,9 @@ impl Database {
             bail!("Line has default values");
         }
 
-        self.connection.execute(
+        let conn = self.connection.lock().unwrap();
+
+        conn.execute(
             "INSERT INTO Lines (start_x, start_y, start_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
                 line_to_add.line.start.x,
@@ -104,7 +112,9 @@ impl Database {
             bail!("Bezier curve has default values");
         }
 
-        self.connection.execute(
+        let conn = self.connection.lock().unwrap();
+
+        conn.execute(
             "INSERT INTO BezierCurves (start_x, start_y, start_z, midpoint_x, midpoint_y, midpoint_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
             params![
                 bezier_to_add.bezier.start.x,
@@ -129,7 +139,9 @@ impl Database {
             bail!("Cubic bezier curve has default values");
         }
 
-        self.connection.execute(
+        let conn = self.connection.lock().unwrap();
+
+        conn.execute(
             "INSERT INTO CubicBezierCurves (start_x, start_y, start_z, end_x, end_y, end_z, handle_1_x, handle_1_y, handle_1_z, handle_2_x, handle_2_y, handle_2_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             params![
                 cubic_bezier_to_add.cubic_bezier.start.x,
