@@ -26,7 +26,6 @@ impl OutputSection {
     pub fn init(&mut self) {
         // Unwrap things from arcs etc
         let lights_ref = self.toggleable_lights.clone();
-        let conn = self.global_state.database.connection.lock().unwrap();
         let global_state = self.global_state.clone();
 
         // Init the value of toggleable lights from the db
@@ -34,6 +33,7 @@ impl OutputSection {
             global_state.clone(),
         )));
 
+        let conn = self.global_state.database.connection.lock().unwrap();
         // Called whenever the db is updated
         conn.update_hook(Some(move |_, database: &str, table: &str, _| {
             if database != "main" && table != "Lights" {
