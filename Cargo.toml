@@ -26,7 +26,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 vector3d = "0.2.1"
 measurements = "0.11.0"
 regex = "1.11.1"
-rusqlite = { version = "*", features = ["bundled"] }
+rusqlite = { version = "*", features = ["bundled", "hooks"] }
 dirs = "6.0.0"
 rusqlite_migration = { version = "1.3.1", features = ["from-directory"] }
 include_dir = "0.7.4"

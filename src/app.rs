@@ -51,7 +51,7 @@ impl Default for App {
             add_line_window: AddLineWindow::new(),
             add_bezier_window: AddBezierWindow::new(),
             add_cubic_bezier_window: AddCubicBezierWindow::new(),
-            output_section: OutputSection::new(global_state.database.get_lights().unwrap()),
+            output_section: OutputSection::default(),
             global_state,
         }
     }
@@ -60,7 +60,12 @@ impl Default for App {
 impl App {
     /// Called once before the first frame.
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-        Default::default()
+        let mut new_self = Self::default();
+
+        println!("Initializing output section");
+        new_self.output_section.init();
+
+        new_self
     }
 
     fn menu_bar(&mut self, ui: &mut egui::Ui) {
