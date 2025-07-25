@@ -35,7 +35,9 @@ impl OutputSection {
 
         let conn = self.global_state.database.connection.lock().unwrap();
         // Called whenever the db is updated
+        println!("Setting up update hook");
         conn.update_hook(Some(move |_, database: &str, table: &str, _| {
+            println!("Database: {database}\nTable: {table}");
             if database != "main" && table != "Lights" {
                 return;
             }

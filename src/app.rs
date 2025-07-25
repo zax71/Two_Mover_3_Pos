@@ -1,5 +1,4 @@
 use std::fs;
-use std::sync::Arc;
 
 use egui_notify::Toasts;
 
@@ -63,6 +62,7 @@ impl App {
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         let mut new_self = Self::default();
 
+        println!("Initializing output section");
         new_self.output_section.init();
 
         new_self
