@@ -12,15 +12,15 @@ pub struct OutputSection {
 
 #[derive(Debug, PartialEq)]
 enum OutputType {
-    OSC,
-    INSTRUCTIONS,
+    Osc,
+    Instructions,
 }
 
 impl OutputSection {
     pub fn new() -> Self {
         Self {
             select_lights_modal: SelectLightsModal::new(),
-            selected_output_type: OutputType::INSTRUCTIONS,
+            selected_output_type: OutputType::Instructions,
             move_time: 1.0,
         }
     }
@@ -57,10 +57,10 @@ impl OutputSection {
             egui::ComboBox::from_label("Output Type")
                 .selected_text(format!("{:?}", self.selected_output_type))
                 .show_ui(ui, |ui| {
-                    ui.selectable_value(&mut self.selected_output_type, OutputType::OSC, "OSC");
+                    ui.selectable_value(&mut self.selected_output_type, OutputType::Osc, "OSC");
                     ui.selectable_value(
                         &mut self.selected_output_type,
-                        OutputType::INSTRUCTIONS,
+                        OutputType::Instructions,
                         "Instructions",
                     );
                 });
