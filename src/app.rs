@@ -51,7 +51,7 @@ impl Default for App {
             add_line_window: AddLineWindow::new(),
             add_bezier_window: AddBezierWindow::new(),
             add_cubic_bezier_window: AddCubicBezierWindow::new(),
-            output_section: OutputSection::new(global_state.database.get_lights().unwrap()),
+            output_section: OutputSection::new(),
             global_state,
         }
     }
@@ -122,7 +122,7 @@ impl eframe::App for App {
         });
 
         egui::SidePanel::right("output").show(ctx, |ui| {
-            self.output_section.add(ui);
+            self.output_section.add(ctx, ui, &mut self.global_state);
         });
 
         // Boast about being written in egui

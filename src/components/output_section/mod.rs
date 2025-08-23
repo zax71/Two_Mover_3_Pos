@@ -1,0 +1,73 @@
+use egui::DragValue;
+
+use crate::{app::GlobalState, components::output_section::select_lights_modal::SelectLightsModal};
+
+mod select_lights_modal;
+
+pub struct OutputSection {
+    select_lights_modal: SelectLightsModal,
+    selected_output_type: OutputType,
+    move_time: f64,
+}
+
+#[derive(Debug, PartialEq)]
+enum OutputType {
+    OSC,
+    INSTRUCTIONS,
+}
+
+impl OutputSection {
+    pub fn new() -> Self {
+        Self {
+            select_lights_modal: SelectLightsModal::new(),
+            selected_output_type: OutputType::INSTRUCTIONS,
+            move_time: 1.0,
+        }
+    }
+
+    pub fn add(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, app_state: &mut GlobalState) {
+        // Add modals
+        self.select_lights_modal.add(ctx);
+
+        ui.vertical_centered(|ui| {
+            ui.heading("Output settings");
+            if ui
+                .button("Select lights")
+                .on_hover_text("What lights should be used in this move?")
+                .clicked()
+            {
+                self.select_lights_modal.update_lights(app_state);
+                self.select_lights_modal.shown = true
+            }
+
+            if ui
+                .button("Select path")
+                .on_hover_text("What path should these lights move along?")
+                .clicked()
+            {
+                todo!("Select path modal")
+            }
+
+            ui.horizontal(|ui| {
+                ui.label("Move time");
+                ui.add(DragValue::new(&mut self.move_time));
+                ui.label("s");
+            });
+
+            egui::ComboBox::from_label("Output Type")
+                .selected_text(format!("{:?}", self.selected_output_type))
+                .show_ui(ui, |ui| {
+                    ui.selectable_value(&mut self.selected_output_type, OutputType::OSC, "OSC");
+                    ui.selectable_value(
+                        &mut self.selected_output_type,
+                        OutputType::INSTRUCTIONS,
+                        "Instructions",
+                    );
+                });
+
+            if ui.button("Execute move").clicked() {
+                todo!("Implement doing light move")
+            }
+        });
+    }
+}
