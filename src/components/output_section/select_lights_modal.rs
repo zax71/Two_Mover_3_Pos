@@ -5,10 +5,17 @@ pub struct SelectLightsModal {
     toggleable_lights: Vec<ToggleableLight>,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct ToggleableLight {
     light: Light,
     state: bool,
+}
+
+impl PartialEq for ToggleableLight {
+    /// Measures the equality of the toggleable light. Ignores the state of the light
+    fn eq(&self, other: &Self) -> bool {
+        self.light == other.light
+    }
 }
 
 impl ToggleableLight {
@@ -36,7 +43,27 @@ impl SelectLightsModal {
                 return;
             }
         };
-        self.toggleable_lights = lights.iter().map(ToggleableLight::from_light).collect();
+
+        let new_toggleable_lights: Vec<ToggleableLight> =
+            lights.iter().map(ToggleableLight::from_light).collect();
+
+        // Delete lights that have been removed from the Vec
+        for (i, light) in self.toggleable_lights.clone().into_iter().enumerate() {
+            if !new_toggleable_lights.contains(&light) {
+                self.toggleable_lights.remove(i);
+            }
+        }
+
+        // Add new lights, if the len is less or equal then we have all the lights already
+        if new_toggleable_lights.len() <= self.toggleable_lights.len() {
+            return;
+        }
+
+        for light in new_toggleable_lights {
+            if !self.toggleable_lights.contains(&light) {
+                self.toggleable_lights.push(light.clone());
+            }
+        }
     }
 
     pub fn add(&mut self, ctx: &egui::Context) {
@@ -50,18 +77,6 @@ impl SelectLightsModal {
                 for toggleable_light in &mut self.toggleable_lights {
                     ui.checkbox(&mut toggleable_light.state, &toggleable_light.light.name);
                 }
-
-                ui.vertical_centered(|ui| {
-                    if ui
-                        .button("Save")
-                        .on_hover_text(
-                            "Saves your selection, press the \"x\" to close without saving",
-                        )
-                        .clicked()
-                    {
-                        todo!("Save the selected lights");
-                    }
-                });
             });
     }
 }
