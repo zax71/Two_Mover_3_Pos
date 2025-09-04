@@ -1,11 +1,19 @@
 use egui::DragValue;
 
-use crate::{app::GlobalState, components::output_section::select_lights_modal::SelectLightsModal};
+use crate::{
+    app::GlobalState,
+    components::output_section::{
+        select_lights_modal::SelectLightsModal, select_path_modal::SelectPathModal,
+    },
+};
 
 mod select_lights_modal;
+mod select_path_modal;
+mod toggleable_item;
 
 pub struct OutputSection {
     select_lights_modal: SelectLightsModal,
+    select_path_modal: SelectPathModal,
     selected_output_type: OutputType,
     move_time: f64,
 }
@@ -20,6 +28,7 @@ impl OutputSection {
     pub fn new() -> Self {
         Self {
             select_lights_modal: SelectLightsModal::new(),
+            select_path_modal: SelectPathModal::new(),
             selected_output_type: OutputType::Instructions,
             move_time: 1.0,
         }
@@ -28,6 +37,7 @@ impl OutputSection {
     pub fn add(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, app_state: &mut GlobalState) {
         // Add modals
         self.select_lights_modal.add(ctx);
+        self.select_path_modal.add(ctx);
 
         ui.vertical_centered(|ui| {
             ui.heading("Output settings");
@@ -45,7 +55,8 @@ impl OutputSection {
                 .on_hover_text("What path should these lights move along?")
                 .clicked()
             {
-                todo!("Select path modal")
+                self.select_path_modal.update_paths(app_state);
+                self.select_path_modal.shown = true
             }
 
             ui.horizontal(|ui| {

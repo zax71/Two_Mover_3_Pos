@@ -1,21 +1,21 @@
 use egui::Layout;
 
-use crate::{app::GlobalState, components::select_vec, path::line::NamedLine};
+use crate::{app::GlobalState, components::select_vec, path::line::Line};
 
 pub struct AddLineWindow {
-    current_line: NamedLine,
+    current_line: Line,
     pub shown: bool,
 }
 
 impl AddLineWindow {
     pub fn new() -> Self {
         Self {
-            current_line: NamedLine::default(),
+            current_line: Line::default(),
             shown: false,
         }
     }
     /// Writes the line to the specified Database
-    fn save(app_state: &mut GlobalState, adding_line: &NamedLine) {
+    fn save(app_state: &mut GlobalState, adding_line: &Line) {
         let db_result = app_state.database.add_line(adding_line);
 
         match db_result {
@@ -50,8 +50,8 @@ impl AddLineWindow {
                         ui.label("Name:");
                         ui.text_edit_singleline(&mut self.current_line.name);
                     });
-                    select_vec(ui, "Start position: ", &mut self.current_line.line.start);
-                    select_vec(ui, "End position: ", &mut self.current_line.line.end);
+                    select_vec(ui, "Start position: ", &mut self.current_line.start);
+                    select_vec(ui, "End position: ", &mut self.current_line.end);
                 });
                 ui.add_space(16.0);
 

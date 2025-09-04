@@ -4,20 +4,15 @@ use vector3d::Vector3d;
 
 use crate::path::{bezier::Bezier, Path};
 
-#[derive(Debug, Default, PartialEq)]
-pub struct NamedCubicBezier {
-    pub name: String,
-    pub cubic_bezier: CubicBezier,
-}
-
-impl IsDefault for NamedCubicBezier {
+impl IsDefault for CubicBezier {
     fn is_default(&self) -> bool {
         *self == Self::default()
     }
 }
 
-#[derive(Debug, Default, PartialEq)]
+#[derive(Debug, Default, PartialEq, Clone)]
 pub struct CubicBezier {
+    pub name: String,
     pub start: Vector3d<f64>,
     pub end: Vector3d<f64>,
     pub handle_1: Vector3d<f64>,
@@ -28,20 +23,49 @@ impl Path for CubicBezier {
     fn point_at(&self, index: &PercentageDecimal) -> Vector3d<f64> {
         // See https://www.desmos.com/calculator/083535c5a3 for an easier to follow version of this,
         // The short of it is, you find the "index" point between the two end points (treating them as lines) and find the point at "index" along that line
-        let bezier_1 = Bezier {
-            start: self.start,
-            midpoint: self.handle_1,
-            end: self.end,
-        };
+        let bezier_1 = Bezier::new(self.start, self.handle_1, self.end);
 
-        let bezier_2 = Bezier {
-            start: self.start,
-            midpoint: self.handle_2,
-            end: self.end,
-        };
+        let bezier_2 = Bezier::new(self.start, self.handle_2, self.end);
 
         bezier_2.point_at(index)
             + (bezier_1.point_at(index) - bezier_2.point_at(index)) * index.value()
+    }
+
+    fn name(&self) -> String {
+        return self.name.clone();
+    }
+}
+
+impl CubicBezier {
+    pub fn new(
+        start: Vector3d<f64>,
+        end: Vector3d<f64>,
+        handle_1: Vector3d<f64>,
+        handle_2: Vector3d<f64>,
+    ) -> Self {
+        Self {
+            name: String::default(),
+            start,
+            end,
+            handle_1,
+            handle_2,
+        }
+    }
+
+    pub fn with_name(
+        name: String,
+        start: Vector3d<f64>,
+        end: Vector3d<f64>,
+        handle_1: Vector3d<f64>,
+        handle_2: Vector3d<f64>,
+    ) -> Self {
+        Self {
+            name,
+            start,
+            end,
+            handle_1,
+            handle_2,
+        }
     }
 }
 
@@ -90,12 +114,7 @@ mod tests {
             z: 0.0,
         };
 
-        let path = CubicBezier {
-            start,
-            handle_1,
-            handle_2,
-            end,
-        };
+        let path = CubicBezier::new(start, handle_1, handle_2, end);
 
         assert_eq!(path.point_at(&Percentage::from_decimal(0.0)), start)
     }
@@ -123,12 +142,7 @@ mod tests {
             z: 0.0,
         };
 
-        let path = CubicBezier {
-            start,
-            handle_1,
-            handle_2,
-            end,
-        };
+        let path = CubicBezier::new(start, handle_1, handle_2, end);
 
         assert_eq!(path.point_at(&Percentage::from_decimal(1.0)), end)
     }
@@ -156,12 +170,7 @@ mod tests {
             z: 0.0,
         };
 
-        let path = CubicBezier {
-            start,
-            handle_1,
-            handle_2,
-            end,
-        };
+        let path = CubicBezier::new(start, handle_1, handle_2, end);
 
         assert!(eq_vector3d(
             path.point_at(&Percentage::from_decimal(0.2)),

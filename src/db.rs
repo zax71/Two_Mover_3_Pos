@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use crate::{
     light::Light,
-    path::{bezier::NamedBezier, cubic_bezier::NamedCubicBezier, line::NamedLine},
+    path::{bezier::Bezier, cubic_bezier::CubicBezier, line::Line, PathEnum},
 };
 
 use std::sync::LazyLock;
@@ -77,7 +77,7 @@ impl Database {
     }
 
     /// Add a named line to the database
-    pub fn add_line(&self, line_to_add: &NamedLine) -> Result<()> {
+    pub fn add_line(&self, line_to_add: &Line) -> Result<()> {
         if line_to_add.is_default() {
             bail!("Line has default values");
         }
@@ -85,12 +85,12 @@ impl Database {
         self.connection.execute(
             "INSERT INTO Lines (start_x, start_y, start_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![
-                line_to_add.line.start.x,
-                line_to_add.line.start.y,
-                line_to_add.line.start.z,
-                line_to_add.line.end.x,
-                line_to_add.line.end.y,
-                line_to_add.line.end.z,
+                line_to_add.start.x,
+                line_to_add.start.y,
+                line_to_add.start.z,
+                line_to_add.end.x,
+                line_to_add.end.y,
+                line_to_add.end.z,
                 line_to_add.name,
             ],
         )?;
@@ -98,8 +98,22 @@ impl Database {
         Ok(())
     }
 
+    pub fn get_lines(&self) -> Result<Vec<Line>> {
+        let mut statement = self.connection.prepare("SELECT * FROM Lines")?;
+
+        let line_iterator = statement.query_map([], |row| {
+            Ok(Line {
+                start: Vector3d::new(row.get(1)?, row.get(2)?, row.get(3)?),
+                end: Vector3d::new(row.get(4)?, row.get(5)?, row.get(6)?),
+                name: row.get(7)?,
+            })
+        })?;
+
+        Ok(line_iterator.collect::<Result<Vec<_>, _>>()?)
+    }
+
     /// Add a named bezier to the database
-    pub fn add_bezier(&self, bezier_to_add: &NamedBezier) -> Result<()> {
+    pub fn add_bezier(&self, bezier_to_add: &Bezier) -> Result<()> {
         if bezier_to_add.is_default() {
             bail!("Bezier curve has default values");
         }
@@ -107,15 +121,15 @@ impl Database {
         self.connection.execute(
             "INSERT INTO BezierCurves (start_x, start_y, start_z, midpoint_x, midpoint_y, midpoint_z, end_x, end_y, end_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
             params![
-                bezier_to_add.bezier.start.x,
-                bezier_to_add.bezier.start.y,
-                bezier_to_add.bezier.start.z,
-                bezier_to_add.bezier.midpoint.x,
-                bezier_to_add.bezier.midpoint.y,
-                bezier_to_add.bezier.midpoint.z,
-                bezier_to_add.bezier.end.x,
-                bezier_to_add.bezier.end.y,
-                bezier_to_add.bezier.end.z,
+                bezier_to_add.start.x,
+                bezier_to_add.start.y,
+                bezier_to_add.start.z,
+                bezier_to_add.midpoint.x,
+                bezier_to_add.midpoint.y,
+                bezier_to_add.midpoint.z,
+                bezier_to_add.end.x,
+                bezier_to_add.end.y,
+                bezier_to_add.end.z,
                 bezier_to_add.name,
             ],
         )?;
@@ -123,8 +137,23 @@ impl Database {
         Ok(())
     }
 
+    pub fn get_beziers(&self) -> Result<Vec<Bezier>> {
+        let mut statement = self.connection.prepare("SELECT * FROM BezierCurves")?;
+
+        let line_iterator = statement.query_map([], |row| {
+            Ok(Bezier {
+                start: Vector3d::new(row.get(1)?, row.get(2)?, row.get(3)?),
+                midpoint: Vector3d::new(row.get(4)?, row.get(5)?, row.get(6)?),
+                end: Vector3d::new(row.get(7)?, row.get(8)?, row.get(9)?),
+                name: row.get(10)?,
+            })
+        })?;
+
+        Ok(line_iterator.collect::<Result<Vec<_>, _>>()?)
+    }
+
     /// Add a named cubic bezier to the database
-    pub fn add_cubic_bezier(&self, cubic_bezier_to_add: &NamedCubicBezier) -> Result<()> {
+    pub fn add_cubic_bezier(&self, cubic_bezier_to_add: &CubicBezier) -> Result<()> {
         if cubic_bezier_to_add.is_default() {
             bail!("Cubic bezier curve has default values");
         }
@@ -132,22 +161,59 @@ impl Database {
         self.connection.execute(
             "INSERT INTO CubicBezierCurves (start_x, start_y, start_z, end_x, end_y, end_z, handle_1_x, handle_1_y, handle_1_z, handle_2_x, handle_2_y, handle_2_z, name) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             params![
-                cubic_bezier_to_add.cubic_bezier.start.x,
-                cubic_bezier_to_add.cubic_bezier.start.y,
-                cubic_bezier_to_add.cubic_bezier.start.z,
-                cubic_bezier_to_add.cubic_bezier.end.x,
-                cubic_bezier_to_add.cubic_bezier.end.y,
-                cubic_bezier_to_add.cubic_bezier.end.z,
-                cubic_bezier_to_add.cubic_bezier.handle_1.x,
-                cubic_bezier_to_add.cubic_bezier.handle_1.y,
-                cubic_bezier_to_add.cubic_bezier.handle_1.z,
-                cubic_bezier_to_add.cubic_bezier.handle_2.x,
-                cubic_bezier_to_add.cubic_bezier.handle_2.y,
-                cubic_bezier_to_add.cubic_bezier.handle_2.z,
+                cubic_bezier_to_add.start.x,
+                cubic_bezier_to_add.start.y,
+                cubic_bezier_to_add.start.z,
+                cubic_bezier_to_add.end.x,
+                cubic_bezier_to_add.end.y,
+                cubic_bezier_to_add.end.z,
+                cubic_bezier_to_add.handle_1.x,
+                cubic_bezier_to_add.handle_1.y,
+                cubic_bezier_to_add.handle_1.z,
+                cubic_bezier_to_add.handle_2.x,
+                cubic_bezier_to_add.handle_2.y,
+                cubic_bezier_to_add.handle_2.z,
                 cubic_bezier_to_add.name,
             ]
         )?;
 
         Ok(())
+    }
+
+    pub fn get_cubic_beziers(&self) -> Result<Vec<CubicBezier>> {
+        let mut statement = self.connection.prepare("SELECT * FROM CubicBezierCurves")?;
+
+        let line_iterator = statement.query_map([], |row| {
+            Ok(CubicBezier {
+                start: Vector3d::new(row.get(1)?, row.get(2)?, row.get(3)?),
+                end: Vector3d::new(row.get(4)?, row.get(5)?, row.get(6)?),
+                handle_1: Vector3d::new(row.get(7)?, row.get(8)?, row.get(9)?),
+                handle_2: Vector3d::new(row.get(10)?, row.get(11)?, row.get(12)?),
+                name: row.get(13)?,
+            })
+        })?;
+
+        Ok(line_iterator.collect::<Result<Vec<_>, _>>()?)
+    }
+
+    pub fn get_paths(&self) -> Result<Vec<PathEnum>> {
+        let mut lines: Vec<PathEnum> = self.get_lines()?.into_iter().map(PathEnum::Line).collect();
+        let mut bezier_curves: Vec<PathEnum> = self
+            .get_beziers()?
+            .into_iter()
+            .map(PathEnum::Bezier)
+            .collect();
+        let mut cubic_bezier_curves: Vec<PathEnum> = self
+            .get_cubic_beziers()?
+            .into_iter()
+            .map(PathEnum::CubicBezier)
+            .collect();
+
+        let mut out_vec: Vec<PathEnum> = vec![];
+        out_vec.append(&mut lines);
+        out_vec.append(&mut bezier_curves);
+        out_vec.append(&mut cubic_bezier_curves);
+
+        Ok(out_vec)
     }
 }

@@ -1,21 +1,21 @@
 use egui::Layout;
 
-use crate::{app::GlobalState, components::select_vec, path::cubic_bezier::NamedCubicBezier};
+use crate::{app::GlobalState, components::select_vec, path::cubic_bezier::CubicBezier};
 
 pub struct AddCubicBezierWindow {
-    current_line: NamedCubicBezier,
+    current_line: CubicBezier,
     pub shown: bool,
 }
 
 impl AddCubicBezierWindow {
     pub fn new() -> Self {
         Self {
-            current_line: NamedCubicBezier::default(),
+            current_line: CubicBezier::default(),
             shown: false,
         }
     }
     /// Writes the line to the specified Database
-    fn save(app_state: &mut GlobalState, adding_cubic_bezier: &NamedCubicBezier) {
+    fn save(app_state: &mut GlobalState, adding_cubic_bezier: &CubicBezier) {
         let db_result = app_state.database.add_cubic_bezier(adding_cubic_bezier);
 
         match db_result {
@@ -50,26 +50,10 @@ impl AddCubicBezierWindow {
                         ui.label("Name:");
                         ui.text_edit_singleline(&mut self.current_line.name);
                     });
-                    select_vec(
-                        ui,
-                        "Start position: ",
-                        &mut self.current_line.cubic_bezier.start,
-                    );
-                    select_vec(
-                        ui,
-                        "End position: ",
-                        &mut self.current_line.cubic_bezier.end,
-                    );
-                    select_vec(
-                        ui,
-                        "Handle 1: ",
-                        &mut self.current_line.cubic_bezier.handle_1,
-                    );
-                    select_vec(
-                        ui,
-                        "Handle 2: ",
-                        &mut self.current_line.cubic_bezier.handle_2,
-                    );
+                    select_vec(ui, "Start position: ", &mut self.current_line.start);
+                    select_vec(ui, "End position: ", &mut self.current_line.end);
+                    select_vec(ui, "Handle 1: ", &mut self.current_line.handle_1);
+                    select_vec(ui, "Handle 2: ", &mut self.current_line.handle_2);
                 });
                 ui.add_space(16.0);
 

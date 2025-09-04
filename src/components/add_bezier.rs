@@ -1,21 +1,21 @@
 use egui::Layout;
 
-use crate::{app::GlobalState, components::select_vec, path::bezier::NamedBezier};
+use crate::{app::GlobalState, components::select_vec, path::bezier::Bezier};
 
 pub struct AddBezierWindow {
-    current_line: NamedBezier,
+    current_line: Bezier,
     pub shown: bool,
 }
 
 impl AddBezierWindow {
     pub fn new() -> Self {
         Self {
-            current_line: NamedBezier::default(),
+            current_line: Bezier::default(),
             shown: false,
         }
     }
     /// Writes the line to the specified Database
-    fn save(app_state: &mut GlobalState, adding_bezier: &NamedBezier) {
+    fn save(app_state: &mut GlobalState, adding_bezier: &Bezier) {
         let db_result = app_state.database.add_bezier(adding_bezier);
 
         match db_result {
@@ -50,9 +50,9 @@ impl AddBezierWindow {
                         ui.label("Name:");
                         ui.text_edit_singleline(&mut self.current_line.name);
                     });
-                    select_vec(ui, "Start position: ", &mut self.current_line.bezier.start);
-                    select_vec(ui, "Midpoint: ", &mut self.current_line.bezier.midpoint);
-                    select_vec(ui, "End position: ", &mut self.current_line.bezier.end);
+                    select_vec(ui, "Start position: ", &mut self.current_line.start);
+                    select_vec(ui, "Midpoint: ", &mut self.current_line.midpoint);
+                    select_vec(ui, "End position: ", &mut self.current_line.end);
                 });
                 ui.add_space(16.0);
 

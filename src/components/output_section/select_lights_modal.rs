@@ -1,8 +1,10 @@
-use crate::{app::GlobalState, light::Light};
+use crate::{
+    app::GlobalState, components::output_section::toggleable_item::ToggleableItem, light::Light,
+};
 
 pub struct SelectLightsModal {
     pub shown: bool,
-    toggleable_lights: Vec<ToggleableLight>,
+    toggleable_lights: Vec<ToggleableItem<Light>>,
 }
 
 #[derive(Default, Clone)]
@@ -44,8 +46,8 @@ impl SelectLightsModal {
             }
         };
 
-        let new_toggleable_lights: Vec<ToggleableLight> =
-            lights.iter().map(ToggleableLight::from_light).collect();
+        let new_toggleable_lights: Vec<ToggleableItem<Light>> =
+            lights.iter().map(ToggleableItem::from_item).collect();
 
         // Delete lights that have been removed from the Vec
         for (i, light) in self.toggleable_lights.clone().into_iter().enumerate() {
@@ -75,7 +77,7 @@ impl SelectLightsModal {
             .open(&mut self.shown)
             .show(ctx, |ui| {
                 for toggleable_light in &mut self.toggleable_lights {
-                    ui.checkbox(&mut toggleable_light.state, &toggleable_light.light.name);
+                    ui.checkbox(&mut toggleable_light.state, &toggleable_light.item.name);
                 }
             });
     }

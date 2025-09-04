@@ -3,20 +3,15 @@ use vector3d::Vector3d;
 
 use crate::path::Path;
 
-#[derive(Debug, Default, PartialEq)]
-pub struct NamedBezier {
-    pub name: String,
-    pub bezier: Bezier,
-}
-
-impl IsDefault for NamedBezier {
+impl IsDefault for Bezier {
     fn is_default(&self) -> bool {
         *self == Self::default()
     }
 }
 
-#[derive(Debug, Default, PartialEq)]
+#[derive(Debug, Default, PartialEq, Clone)]
 pub struct Bezier {
+    pub name: String,
     pub start: Vector3d<f64>,
     pub midpoint: Vector3d<f64>,
     pub end: Vector3d<f64>,
@@ -30,6 +25,35 @@ impl Path for Bezier {
         let end_line_point = self.start + (self.midpoint - self.start) * index.value();
 
         end_line_point + (start_line_point - end_line_point) * index.value()
+    }
+
+    fn name(&self) -> String {
+        return self.name.clone();
+    }
+}
+
+impl Bezier {
+    pub fn new(start: Vector3d<f64>, midpoint: Vector3d<f64>, end: Vector3d<f64>) -> Self {
+        Self {
+            name: String::default(),
+            start,
+            midpoint,
+            end,
+        }
+    }
+
+    pub fn with_name(
+        name: String,
+        start: Vector3d<f64>,
+        midpoint: Vector3d<f64>,
+        end: Vector3d<f64>,
+    ) -> Self {
+        Self {
+            name,
+            start,
+            midpoint,
+            end,
+        }
     }
 }
 
@@ -59,6 +83,7 @@ mod tests {
         };
 
         let path = Bezier {
+            name: String::default(),
             start,
             midpoint,
             end,
@@ -85,6 +110,7 @@ mod tests {
             z: 0.0,
         };
         let path = Bezier {
+            name: String::default(),
             start,
             midpoint,
             end,
@@ -111,6 +137,7 @@ mod tests {
             z: 0.0,
         };
         let path = Bezier {
+            name: String::default(),
             start,
             midpoint,
             end,
