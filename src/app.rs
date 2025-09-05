@@ -120,7 +120,8 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             self.menu_bar(ui);
         });
-
+        
+        // Add output section
         egui::SidePanel::right("output").show(ctx, |ui| {
             self.output_section.add(ctx, ui, &mut self.global_state);
         });
