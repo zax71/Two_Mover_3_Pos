@@ -1,10 +1,8 @@
 use egui::DragValue;
 use vector3d::Vector3d;
 
-pub mod add_bezier;
-pub mod add_cubic_bezier;
 pub mod add_light_window;
-pub mod add_line_window;
+pub mod add_path;
 pub mod app_component;
 pub mod output_section;
 

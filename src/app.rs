@@ -2,10 +2,10 @@ use std::fs;
 
 use egui_notify::Toasts;
 
-use crate::components::add_bezier::AddBezierWindow;
-use crate::components::add_cubic_bezier::AddCubicBezierWindow;
+use crate::components::add_path::add_bezier::AddBezierWindow;
+use crate::components::add_path::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_light_window::AddLightWindow;
-use crate::components::add_line_window::AddLineWindow;
+use crate::components::add_path::add_line_window::AddLineWindow;
 use crate::components::output_section::OutputSection;
 use crate::db::Database;
 use crate::light::Light;
