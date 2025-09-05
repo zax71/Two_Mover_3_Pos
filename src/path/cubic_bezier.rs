@@ -37,6 +37,7 @@ impl Path for CubicBezier {
 }
 
 impl CubicBezier {
+    #[allow(dead_code)]
     pub fn new(
         start: Vector3d<f64>,
         end: Vector3d<f64>,
@@ -45,22 +46,6 @@ impl CubicBezier {
     ) -> Self {
         Self {
             name: String::default(),
-            start,
-            end,
-            handle_1,
-            handle_2,
-        }
-    }
-
-    pub fn with_name(
-        name: String,
-        start: Vector3d<f64>,
-        end: Vector3d<f64>,
-        handle_1: Vector3d<f64>,
-        handle_2: Vector3d<f64>,
-    ) -> Self {
-        Self {
-            name,
             start,
             end,
             handle_1,

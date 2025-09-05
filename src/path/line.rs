@@ -28,16 +28,13 @@ impl Path for Line {
 }
 
 impl Line {
+    #[allow(dead_code)]
     pub fn new(start: Vector3d<f64>, end: Vector3d<f64>) -> Self {
         Self {
             name: String::default(),
             start,
             end,
         }
-    }
-
-    pub fn with_name(name: String, start: Vector3d<f64>, end: Vector3d<f64>) -> Self {
-        Self { name, start, end }
     }
 }
 

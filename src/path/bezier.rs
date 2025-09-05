@@ -41,20 +41,6 @@ impl Bezier {
             end,
         }
     }
-
-    pub fn with_name(
-        name: String,
-        start: Vector3d<f64>,
-        midpoint: Vector3d<f64>,
-        end: Vector3d<f64>,
-    ) -> Self {
-        Self {
-            name,
-            start,
-            midpoint,
-            end,
-        }
-    }
 }
 
 #[cfg(test)]
