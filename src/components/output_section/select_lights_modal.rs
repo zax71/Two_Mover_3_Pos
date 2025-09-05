@@ -7,28 +7,6 @@ pub struct SelectLightsModal {
     toggleable_lights: Vec<ToggleableItem<Light>>,
 }
 
-#[derive(Default, Clone)]
-struct ToggleableLight {
-    light: Light,
-    state: bool,
-}
-
-impl PartialEq for ToggleableLight {
-    /// Measures the equality of the toggleable light. Ignores the state of the light
-    fn eq(&self, other: &Self) -> bool {
-        self.light == other.light
-    }
-}
-
-impl ToggleableLight {
-    pub fn from_light(light: &Light) -> Self {
-        Self {
-            light: light.clone(),
-            state: false,
-        }
-    }
-}
-
 impl SelectLightsModal {
     pub fn new() -> Self {
         Self {
