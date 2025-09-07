@@ -2,9 +2,9 @@ use std::fs;
 
 use egui_notify::Toasts;
 
+use crate::components::add_light_window::AddLightWindow;
 use crate::components::add_path::add_bezier::AddBezierWindow;
 use crate::components::add_path::add_cubic_bezier::AddCubicBezierWindow;
-use crate::components::add_light_window::AddLightWindow;
 use crate::components::add_path::add_line_window::AddLineWindow;
 use crate::components::output_section::OutputSection;
 use crate::db::Database;
@@ -120,7 +120,7 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             self.menu_bar(ui);
         });
-        
+
         // Add output section
         egui::SidePanel::right("output").show(ctx, |ui| {
             self.output_section.add(ctx, ui, &mut self.global_state);
