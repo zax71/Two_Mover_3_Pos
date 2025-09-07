@@ -1,3 +1,5 @@
+use log::debug;
+
 use crate::{
     app::GlobalState,
     components::output_section::toggleable_item::ToggleableItem,
@@ -49,17 +51,136 @@ impl SelectPathModal {
         }
     }
 
+    fn only_one_radio<T>(
+        current_paths: &mut Vec<ToggleableItem<T>>, // Pass by reference and modify in place
+        previous_paths: Vec<ToggleableItem<T>>,
+    ) {
+        // Find the index that was selected before. Only 1 should be selected so exit early when we find it
+        let mut previous_selection: Option<usize> = None;
+        for (i, path) in previous_paths.iter().enumerate() {
+            if path.state != true {
+                continue;
+            }
+
+            previous_selection = Some(i);
+            break;
+        }
+
+        // Loop through new paths, if we find that there are two items selected then pick the newer one
+        let mut current_selection: Vec<usize> = vec![];
+        for (i, path) in current_paths.iter().enumerate() {
+            if path.state != true {
+                continue;
+            }
+
+            current_selection.push(i);
+        }
+
+        // Check that len is not > 2 as that would indicate something weird is happening
+        if current_selection.len() > 2 {
+            panic!("There are more than 2 selected items in the select path modal!")
+        }
+
+        // Do nothing if there is only one thing selected
+        if current_selection.len() == 1 {
+            return;
+        }
+
+        // If two items are selected, we need to remove the older one
+        match previous_selection {
+            Some(previous_selection) => {
+                current_selection.retain(|value| *value == previous_selection)
+            }
+            None => return,
+        }
+
+        // Return the previous value to false
+        current_paths[current_selection[0]].state = false;
+    }
+
     pub fn add(&mut self, ctx: &egui::Context) {
-        egui::Window::new("Select Paths")
+        egui::Window::new("Select Path")
             .collapsible(false)
             .resizable(true)
             .fade_in(true)
             .fade_out(true)
             .open(&mut self.shown)
             .show(ctx, |ui| {
-                for toggleable_light in &mut self.toggleable_paths {
-                    ui.checkbox(&mut toggleable_light.state, toggleable_light.item.name());
+                let previous_paths = self.toggleable_paths.clone();
+                for toggleable_path in &mut self.toggleable_paths {
+                    ui.radio_value(
+                        &mut toggleable_path.state,
+                        true,
+                        toggleable_path.item.name(),
+                    );
                 }
+                // Make sure that only one of the radio buttons is selected at a time
+                Self::only_one_radio(&mut self.toggleable_paths, previous_paths);
             });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_radio_zero_previous_true() {
+        let previous_state = vec![
+            ToggleableItem::from_item(&1),
+            ToggleableItem::from_item(&2),
+            ToggleableItem::from_item(&3),
+            ToggleableItem::from_item(&4),
+        ];
+
+        let mut current_state = previous_state.clone();
+
+        SelectPathModal::only_one_radio(&mut current_state, previous_state.clone());
+        assert_eq!(current_state.clone(), previous_state);
+    }
+
+    #[test]
+    fn test_radio_one_previous_true() {
+        let mut previous_state = vec![
+            ToggleableItem::from_item(&1),
+            ToggleableItem::from_item(&2),
+            ToggleableItem::from_item(&3),
+            ToggleableItem::from_item(&4),
+        ];
+
+        previous_state[0].state = true;
+
+        let mut current_state = previous_state.clone();
+
+        SelectPathModal::only_one_radio(&mut current_state, previous_state.clone());
+        assert_eq!(current_state.clone(), previous_state);
+    }
+
+    #[test]
+    fn test_radio_one_previous_true_two_current_true() {
+        let mut previous_state = vec![
+            ToggleableItem::from_item(&1),
+            ToggleableItem::from_item(&2),
+            ToggleableItem::from_item(&3),
+            ToggleableItem::from_item(&4),
+        ];
+
+        previous_state[0].state = true;
+
+        let mut current_state = previous_state.clone();
+        current_state[2].state = true;
+
+        let mut expected_state = vec![
+            ToggleableItem::from_item(&1),
+            ToggleableItem::from_item(&2),
+            ToggleableItem::from_item(&3),
+            ToggleableItem::from_item(&4),
+        ];
+        expected_state[2].state = true;
+
+        SelectPathModal::only_one_radio(&mut current_state, previous_state.clone());
+        assert_eq!(current_state.clone(), expected_state);
     }
 }

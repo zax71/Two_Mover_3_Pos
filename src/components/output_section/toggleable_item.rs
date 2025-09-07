@@ -1,4 +1,4 @@
-#[derive(Default, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct ToggleableItem<T> {
     pub item: T,
     pub state: bool,

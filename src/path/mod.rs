@@ -9,7 +9,7 @@ use vector3d::Vector3d;
 use crate::path::{bezier::Bezier, cubic_bezier::CubicBezier, line::Line};
 
 #[enum_dispatch]
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PathEnum {
     Line,
     Bezier,
