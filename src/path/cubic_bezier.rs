@@ -127,7 +127,7 @@ mod tests {
             z: 0.0,
         };
 
-        let path = CubicBezier::new(start, handle_1, handle_2, end);
+        let path = CubicBezier::new(start, end, handle_1, handle_2);
 
         assert_eq!(path.point_at(&Percentage::from_decimal(1.0)), end)
     }
@@ -155,7 +155,7 @@ mod tests {
             z: 0.0,
         };
 
-        let path = CubicBezier::new(start, handle_1, handle_2, end);
+        let path = CubicBezier::new(start, end, handle_1, handle_2);
 
         assert!(eq_vector3d(
             path.point_at(&Percentage::from_decimal(0.2)),
