@@ -32,7 +32,7 @@ impl Path for CubicBezier {
     }
 
     fn name(&self) -> String {
-        return self.name.clone();
+        self.name.clone()
     }
 }
 

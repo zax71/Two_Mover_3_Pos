@@ -23,7 +23,7 @@ impl Path for Line {
     }
 
     fn name(&self) -> String {
-        return self.name.clone();
+        self.name.clone()
     }
 }
 

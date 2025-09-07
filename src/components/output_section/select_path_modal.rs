@@ -58,7 +58,7 @@ impl SelectPathModal {
             .open(&mut self.shown)
             .show(ctx, |ui| {
                 for toggleable_light in &mut self.toggleable_paths {
-                    ui.checkbox(&mut toggleable_light.state, &toggleable_light.item.name());
+                    ui.checkbox(&mut toggleable_light.state, toggleable_light.item.name());
                 }
             });
     }
