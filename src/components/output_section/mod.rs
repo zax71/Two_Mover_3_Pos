@@ -7,6 +7,7 @@ use crate::{
     },
 };
 
+mod move_calculator;
 mod select_lights_modal;
 mod select_path_modal;
 mod toggleable_item;

@@ -2911,6 +2911,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "trig"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e6c4ae14889fee5b55f6fffb932dc50b0a3c77e5a06d65bb0a6735d2d4c51f4"
+
+[[package]]
 name = "ttf-parser"
 version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2936,6 +2942,7 @@ dependencies = [
  "rusqlite",
  "rusqlite_migration",
  "serde",
+ "trig",
  "vector3d",
 ]
 
