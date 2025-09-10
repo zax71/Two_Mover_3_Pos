@@ -1,5 +1,3 @@
-use log::debug;
-
 use crate::{
     app::GlobalState,
     components::output_section::toggleable_item::ToggleableItem,
