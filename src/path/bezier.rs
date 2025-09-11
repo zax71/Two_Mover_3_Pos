@@ -1,7 +1,7 @@
 use isx::prelude::IsDefault;
 use vector3d::Vector3d;
 
-use crate::path::Path;
+use crate::path::{line::Line, Path};
 
 impl IsDefault for Bezier {
     fn is_default(&self) -> bool {
@@ -21,8 +21,9 @@ impl Path for Bezier {
     fn point_at(&self, index: &percentage::PercentageDecimal) -> Vector3d<f64> {
         // See https://www.desmos.com/calculator/083535c5a3 for an easier to follow version of this,
         // The short of it is, you find the "index" point between the two end points (treating them as lines) and find the point at "index" along that line
-        let start_line_point = self.midpoint + (self.end - self.midpoint) * index.value();
-        let end_line_point = self.start + (self.midpoint - self.start) * index.value();
+
+        let start_line_point = Line::new(self.midpoint, self.end).point_at(index);
+        let end_line_point = Line::new(self.start, self.midpoint).point_at(index);
 
         end_line_point + (start_line_point - end_line_point) * index.value()
     }
