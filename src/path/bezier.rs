@@ -25,7 +25,7 @@ impl Path for Bezier {
         let start_line_point = Line::new(self.midpoint, self.end).point_at(index);
         let end_line_point = Line::new(self.start, self.midpoint).point_at(index);
 
-        end_line_point + (start_line_point - end_line_point) * index.value()
+        Line::new(end_line_point, start_line_point).point_at(index)
     }
 
     fn name(&self) -> String {
