@@ -3,7 +3,6 @@ use vector3d::Vector3d;
 
 pub mod add_light_window;
 pub mod add_path;
-pub mod app_component;
 pub mod output_section;
 
 /// Displays a component with three input boxes for x,y,z coordinates
