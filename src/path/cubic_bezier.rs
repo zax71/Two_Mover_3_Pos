@@ -2,7 +2,7 @@ use isx::prelude::IsDefault;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
-use crate::path::{bezier::Bezier, Path};
+use crate::path::{bezier::Bezier, line::Line, Path};
 
 impl IsDefault for CubicBezier {
     fn is_default(&self) -> bool {
@@ -23,12 +23,11 @@ impl Path for CubicBezier {
     fn point_at(&self, index: &PercentageDecimal) -> Vector3d<f64> {
         // See https://www.desmos.com/calculator/083535c5a3 for an easier to follow version of this,
         // The short of it is, you find the "index" point between the two end points (treating them as lines) and find the point at "index" along that line
-        let bezier_1 = Bezier::new(self.start, self.handle_1, self.end);
+        let bezier_1 = Bezier::new(self.start, self.handle_1, self.end).point_at(index);
 
-        let bezier_2 = Bezier::new(self.start, self.handle_2, self.end);
+        let bezier_2 = Bezier::new(self.start, self.handle_2, self.end).point_at(index);
 
-        bezier_2.point_at(index)
-            + (bezier_1.point_at(index) - bezier_2.point_at(index)) * index.value()
+        Line::new(bezier_2, bezier_1).point_at(index)
     }
 
     fn name(&self) -> String {
