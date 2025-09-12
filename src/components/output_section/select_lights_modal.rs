@@ -15,6 +15,7 @@ impl SelectLightsModal {
         }
     }
 
+    /// This function adds any new lights to the UI that have been added since it's construction, while keeping the toggled state of any existing lights
     pub fn update_lights(&mut self, app_state: &mut GlobalState) {
         let lights = match app_state.database.get_lights() {
             Ok(lights) => lights,
@@ -46,6 +47,7 @@ impl SelectLightsModal {
         }
     }
 
+    /// Draw the select lights modal to the UI - called every frame
     pub fn add(&mut self, ctx: &egui::Context) {
         egui::Window::new("Select Lights")
             .collapsible(false)

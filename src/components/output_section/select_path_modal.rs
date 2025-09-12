@@ -17,6 +17,7 @@ impl SelectPathModal {
         }
     }
 
+    /// This function adds any new paths to the UI that have been added since it's construction, while keeping the toggled state of any existing paths
     pub fn update_paths(&mut self, app_state: &mut GlobalState) {
         let paths = match app_state.database.get_paths() {
             Ok(lines) => lines,
@@ -49,6 +50,7 @@ impl SelectPathModal {
         }
     }
 
+    /// This function will modify current_paths so that it only has one selected - preferring the newer of the two items if there are two items selected
     fn only_one_radio<T>(
         current_paths: &mut Vec<ToggleableItem<T>>, // Pass by reference and modify in place
         previous_paths: Vec<ToggleableItem<T>>,
@@ -96,6 +98,7 @@ impl SelectPathModal {
         current_paths[current_selection[0]].state = false;
     }
 
+    /// This adds the select path modal to the UI, called every frame
     pub fn add(&mut self, ctx: &egui::Context) {
         egui::Window::new("Select Path")
             .collapsible(false)
