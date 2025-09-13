@@ -36,6 +36,7 @@ impl Path for CubicBezier {
 }
 
 impl CubicBezier {
+    /// Make a new CubicBezier where you do not care about it's name
     #[allow(dead_code)]
     pub fn new(
         start: Vector3d<f64>,

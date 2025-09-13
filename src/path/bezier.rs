@@ -34,6 +34,7 @@ impl Path for Bezier {
 }
 
 impl Bezier {
+    /// Make a new Bezier where you don't care about it's name
     pub fn new(start: Vector3d<f64>, midpoint: Vector3d<f64>, end: Vector3d<f64>) -> Self {
         Self {
             name: String::default(),

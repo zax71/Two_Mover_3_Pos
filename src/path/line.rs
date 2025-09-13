@@ -3,17 +3,17 @@ use isx::prelude::IsDefault;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
-impl IsDefault for Line {
-    fn is_default(&self) -> bool {
-        *self == Self::default()
-    }
-}
-
 #[derive(Debug, Default, PartialEq, Clone)]
 pub struct Line {
     pub name: String,
     pub start: Vector3d<f64>,
     pub end: Vector3d<f64>,
+}
+
+impl IsDefault for Line {
+    fn is_default(&self) -> bool {
+        *self == Self::default()
+    }
 }
 
 impl Path for Line {
@@ -28,6 +28,7 @@ impl Path for Line {
 }
 
 impl Line {
+    // Make a new Line where you do not care about it's name
     #[allow(dead_code)]
     pub fn new(start: Vector3d<f64>, end: Vector3d<f64>) -> Self {
         Self {
