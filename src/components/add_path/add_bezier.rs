@@ -3,14 +3,14 @@ use egui::Layout;
 use crate::{app::GlobalState, components::select_vec, path::bezier::Bezier};
 
 pub struct AddBezierWindow {
-    current_line: Bezier,
+    current_bezier: Bezier,
     pub shown: bool,
 }
 
 impl AddBezierWindow {
     pub fn new() -> Self {
         Self {
-            current_line: Bezier::default(),
+            current_bezier: Bezier::default(),
             shown: false,
         }
     }
@@ -48,11 +48,11 @@ impl AddBezierWindow {
                 ui.vertical(|ui| {
                     ui.horizontal(|ui| {
                         ui.label("Name:");
-                        ui.text_edit_singleline(&mut self.current_line.name);
+                        ui.text_edit_singleline(&mut self.current_bezier.name);
                     });
-                    select_vec(ui, "Start position: ", &mut self.current_line.start);
-                    select_vec(ui, "Midpoint: ", &mut self.current_line.midpoint);
-                    select_vec(ui, "End position: ", &mut self.current_line.end);
+                    select_vec(ui, "Start position: ", &mut self.current_bezier.start);
+                    select_vec(ui, "Midpoint: ", &mut self.current_bezier.midpoint);
+                    select_vec(ui, "End position: ", &mut self.current_bezier.end);
                 });
                 ui.add_space(16.0);
 
@@ -63,7 +63,7 @@ impl AddBezierWindow {
                     ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.button("Add").clicked() {
                             open = false;
-                            Self::save(app_state, &self.current_line);
+                            Self::save(app_state, &self.current_bezier);
                         }
                     });
                 })
