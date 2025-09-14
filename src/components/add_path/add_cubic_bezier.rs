@@ -3,14 +3,14 @@ use egui::Layout;
 use crate::{app::GlobalState, components::select_vec, path::cubic_bezier::CubicBezier};
 
 pub struct AddCubicBezierWindow {
-    current_line: CubicBezier,
+    current_cubic_bezier: CubicBezier,
     pub shown: bool,
 }
 
 impl AddCubicBezierWindow {
     pub fn new() -> Self {
         Self {
-            current_line: CubicBezier::default(),
+            current_cubic_bezier: CubicBezier::default(),
             shown: false,
         }
     }
@@ -48,12 +48,12 @@ impl AddCubicBezierWindow {
                 ui.vertical(|ui| {
                     ui.horizontal(|ui| {
                         ui.label("Name:");
-                        ui.text_edit_singleline(&mut self.current_line.name);
+                        ui.text_edit_singleline(&mut self.current_cubic_bezier.name);
                     });
-                    select_vec(ui, "Start position: ", &mut self.current_line.start);
-                    select_vec(ui, "End position: ", &mut self.current_line.end);
-                    select_vec(ui, "Handle 1: ", &mut self.current_line.handle_1);
-                    select_vec(ui, "Handle 2: ", &mut self.current_line.handle_2);
+                    select_vec(ui, "Start position: ", &mut self.current_cubic_bezier.start);
+                    select_vec(ui, "End position: ", &mut self.current_cubic_bezier.end);
+                    select_vec(ui, "Handle 1: ", &mut self.current_cubic_bezier.handle_1);
+                    select_vec(ui, "Handle 2: ", &mut self.current_cubic_bezier.handle_2);
                 });
                 ui.add_space(16.0);
 
@@ -64,7 +64,7 @@ impl AddCubicBezierWindow {
                     ui.with_layout(Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.button("Add").clicked() {
                             open = false;
-                            Self::save(app_state, &self.current_line);
+                            Self::save(app_state, &self.current_cubic_bezier);
                         }
                     });
                 })
