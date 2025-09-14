@@ -10,7 +10,6 @@ pub struct Frame {
     light_states: Vec<LightState>,
 }
 
-// TODO: Figure out return type
 /// Calculates where each of the lights needs to point during a move.
 /// frames arg defines how many points should be calculated - must be >0 and the higher it is, the more accurate the move will be
 pub fn calculate_move(
