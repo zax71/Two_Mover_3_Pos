@@ -32,7 +32,6 @@ impl Default for GlobalState {
 }
 
 pub struct App {
-    pub current_light: Light,
     add_light_window: AddLightWindow,
     add_line_window: AddLineWindow,
     add_bezier_window: AddBezierWindow,
@@ -46,7 +45,6 @@ impl Default for App {
         let global_state = GlobalState::default();
 
         Self {
-            current_light: Light::default(),
             add_light_window: AddLightWindow::new(),
             add_line_window: AddLineWindow::new(),
             add_bezier_window: AddBezierWindow::new(),
