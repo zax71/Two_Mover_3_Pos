@@ -52,7 +52,7 @@ impl SelectLightsModal {
         let mut lights: Vec<Light> = vec![];
 
         for current_light in &self.toggleable_lights {
-            if current_light.state == true {
+            if current_light.state {
                 lights.push(current_light.unwrap());
             }
         }

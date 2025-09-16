@@ -45,8 +45,8 @@ impl Light {
 
         // The pan can be -ve and when that occurs it is taking the reading anticlockwise. Let's add 180 to the positive version of the pan to fix it
         if pan < 0.0 {
-            pan = pan * -1.0; // make positive
-            pan = pan + 180.0;
+            pan *= -1.0; // make positive
+            pan += 180.0;
         }
 
         LightState {

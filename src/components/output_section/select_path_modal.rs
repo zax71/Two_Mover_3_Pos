@@ -54,7 +54,7 @@ impl SelectPathModal {
     pub fn get_selected_path(&self) -> Option<PathEnum> {
         let mut path: Option<PathEnum> = None;
         for current_path in &self.toggleable_paths {
-            if current_path.state == true {
+            if current_path.state {
                 path = Some(current_path.unwrap());
                 break;
             }
@@ -65,13 +65,13 @@ impl SelectPathModal {
 
     /// This function will modify current_paths so that it only has one selected - preferring the newer of the two items if there are two items selected
     fn only_one_radio<T>(
-        current_paths: &mut Vec<ToggleableItem<T>>, // Pass by reference and modify in place
+        current_paths: &mut [ToggleableItem<T>], // Pass by reference and modify in place
         previous_paths: Vec<ToggleableItem<T>>,
     ) {
         // Find the index that was selected before. Only 1 should be selected so exit early when we find it
         let mut previous_selection: Option<usize> = None;
         for (i, path) in previous_paths.iter().enumerate() {
-            if path.state != true {
+            if !path.state {
                 continue;
             }
 
@@ -82,7 +82,7 @@ impl SelectPathModal {
         // Loop through new paths, if we find that there are two items selected then pick the newer one
         let mut current_selection: Vec<usize> = vec![];
         for (i, path) in current_paths.iter().enumerate() {
-            if path.state != true {
+            if !path.state {
                 continue;
             }
 

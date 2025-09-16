@@ -98,7 +98,7 @@ impl OutputSection {
                     }
                 };
 
-                if lights.len() == 0 {
+                if lights.is_empty() {
                     app_state
                         .toasts
                         .warning("No lights are selected - try selecting some lights");

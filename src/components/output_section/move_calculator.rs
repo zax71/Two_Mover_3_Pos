@@ -21,7 +21,7 @@ pub fn calculate_move(
     move_time: f64,
 ) -> Vec<Frame> {
     // Ensure that we actually have lights
-    if lights.len() == 0 {
+    if lights.is_empty() {
         panic!("Lights must be passed into calculate_move, an empty vec was passed instead");
     }
 
