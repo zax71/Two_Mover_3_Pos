@@ -1,7 +1,7 @@
 use egui::DragValue;
 
 use crate::{
-    app::{self, GlobalState},
+    app::GlobalState,
     components::output_section::{
         select_lights_modal::SelectLightsModal, select_path_modal::SelectPathModal,
     },

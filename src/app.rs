@@ -8,7 +8,6 @@ use crate::components::add_path::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_path::add_line_window::AddLineWindow;
 use crate::components::output_section::OutputSection;
 use crate::db::Database;
-use crate::light::Light;
 
 pub struct GlobalState {
     pub database: Database,
