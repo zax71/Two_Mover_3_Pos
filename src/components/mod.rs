@@ -9,8 +9,13 @@ pub mod output_section;
 pub fn select_vec(ui: &mut egui::Ui, name: &str, selecting_vec: &mut Vector3d<f64>) {
     ui.horizontal(|ui| {
         ui.label(name);
+        ui.label("x:");
         ui.add(DragValue::new(&mut selecting_vec.x).speed(0.1));
+        ui.label("y:");
         ui.add(DragValue::new(&mut selecting_vec.y).speed(0.1));
+        ui.label("z:");
         ui.add(DragValue::new(&mut selecting_vec.z).speed(0.1));
+        // TODO: Show tooltip on click too
+        ui.label("?").on_hover_text("These are cartesian coordinates with x being right, y being forwards and z up (like it is in mathematical contexts)");
     });
 }
