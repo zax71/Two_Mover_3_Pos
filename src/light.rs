@@ -41,7 +41,7 @@ impl Light {
         // Adding f64::MIN_POSITIVE to stop divide by zero errors
         let mut pan =
             (coordinate.x - self.coordinates.x).atan2d(&(coordinate.y - self.coordinates.y));
-        let tilt = ((distance_straight / distance_z + f64::MIN_POSITIVE).atand()) * -1.0; // * -1 as it is always -ve
+        let tilt = -((distance_straight / distance_z + f64::MIN_POSITIVE).atand()); // * -1 as it is always -ve
 
         // The pan can be -ve and when that occurs it is taking the reading anticlockwise. Let's add 180 to the positive version of the pan to fix it
         if pan < 0.0 {
