@@ -5,6 +5,8 @@ use crate::{
     path::{Path, PathEnum},
 };
 
+#[derive(Debug)]
+#[allow(dead_code)] // TODO: Probably not needed in the long run
 pub struct Frame {
     delay: f64,
     light_states: Vec<LightState>,
@@ -18,6 +20,11 @@ pub fn calculate_move(
     frames: u16,
     move_time: f64,
 ) -> Vec<Frame> {
+    // Ensure that we actually have lights
+    if lights.len() == 0 {
+        panic!("Lights must be passed into calculate_move, an empty vec was passed instead");
+    }
+
     let percent_per_frame = (1 / frames) as f64;
     let mut out_frames: Vec<Frame> = vec![];
 

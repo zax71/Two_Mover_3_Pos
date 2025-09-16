@@ -1,7 +1,7 @@
 use egui::DragValue;
 
 use crate::{
-    app::GlobalState,
+    app::{self, GlobalState},
     components::output_section::{
         select_lights_modal::SelectLightsModal, select_path_modal::SelectPathModal,
     },
@@ -17,6 +17,7 @@ pub struct OutputSection {
     select_path_modal: SelectPathModal,
     selected_output_type: OutputType,
     move_time: f64,
+    frames: u16,
 }
 
 #[derive(Debug, PartialEq)]
@@ -32,6 +33,7 @@ impl OutputSection {
             select_path_modal: SelectPathModal::new(),
             selected_output_type: OutputType::Instructions,
             move_time: 1.0,
+            frames: 10,
         }
     }
 
@@ -66,6 +68,11 @@ impl OutputSection {
                 ui.label("s");
             });
 
+            ui.horizontal(|ui| {
+                ui.label("Frames");
+                ui.add(DragValue::new(&mut self.frames));
+            });
+
             egui::ComboBox::from_label("Output Type")
                 .selected_text(format!("{:?}", self.selected_output_type))
                 .show_ui(ui, |ui| {
@@ -78,7 +85,30 @@ impl OutputSection {
                 });
 
             if ui.button("Execute move").clicked() {
-                todo!("Implement doing light move")
+                let some_paths = self.select_path_modal.get_selected_path();
+                let lights = self.select_lights_modal.get_selected_lights();
+
+                let path = match some_paths {
+                    Some(path) => path,
+                    None => {
+                        app_state
+                            .toasts
+                            .warning("No path is selected - try selecting a path");
+                        return;
+                    }
+                };
+
+                if lights.len() == 0 {
+                    app_state
+                        .toasts
+                        .warning("No lights are selected - try selecting some lights");
+                    return;
+                }
+
+                let frames =
+                    move_calculator::calculate_move(path, lights, self.frames, self.move_time);
+
+                println!("{:#?}", frames)
             }
         });
     }

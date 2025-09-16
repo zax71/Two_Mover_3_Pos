@@ -6,7 +6,7 @@ use crate::{
 
 pub struct SelectPathModal {
     pub shown: bool,
-    toggleable_paths: Vec<ToggleableItem<PathEnum>>,
+    pub toggleable_paths: Vec<ToggleableItem<PathEnum>>,
 }
 
 impl SelectPathModal {
@@ -48,6 +48,19 @@ impl SelectPathModal {
                 self.toggleable_paths.push(path.clone());
             }
         }
+    }
+
+    /// Returns the currently selected path. If none are selected then the Option value will be None.
+    pub fn get_selected_path(&self) -> Option<PathEnum> {
+        let mut path: Option<PathEnum> = None;
+        for current_path in &self.toggleable_paths {
+            if current_path.state == true {
+                path = Some(current_path.unwrap());
+                break;
+            }
+        }
+
+        path
     }
 
     /// This function will modify current_paths so that it only has one selected - preferring the newer of the two items if there are two items selected

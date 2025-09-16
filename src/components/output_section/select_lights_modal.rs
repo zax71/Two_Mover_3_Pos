@@ -4,7 +4,7 @@ use crate::{
 
 pub struct SelectLightsModal {
     pub shown: bool,
-    toggleable_lights: Vec<ToggleableItem<Light>>,
+    pub toggleable_lights: Vec<ToggleableItem<Light>>,
 }
 
 impl SelectLightsModal {
@@ -45,6 +45,19 @@ impl SelectLightsModal {
                 self.toggleable_lights.push(light.clone());
             }
         }
+    }
+
+    /// Gets the selected lights - can be an empty vec if no lights are selected
+    pub fn get_selected_lights(&self) -> Vec<Light> {
+        let mut lights: Vec<Light> = vec![];
+
+        for current_light in &self.toggleable_lights {
+            if current_light.state == true {
+                lights.push(current_light.unwrap());
+            }
+        }
+
+        lights
     }
 
     /// Draw the select lights modal to the UI - called every frame
