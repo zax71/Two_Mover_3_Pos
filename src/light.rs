@@ -1,9 +1,8 @@
 use isx::prelude::IsDefault;
-use serde::{Deserialize, Serialize};
 use trig::Trig;
 use vector3d::Vector3d;
 
-#[derive(Default, Deserialize, Serialize, PartialEq, Clone)]
+#[derive(Default, PartialEq, Clone)]
 pub struct Light {
     pub coordinates: Vector3d<f64>,
     pub minimum_beam: u16,

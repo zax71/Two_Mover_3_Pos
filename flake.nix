@@ -52,6 +52,9 @@
             xorg.libXi
             xorg.libX11
 
+            # Dev tooling
+            cargo-edit
+
           ];
 
           LD_LIBRARY_PATH = "${lib.makeLibraryPath buildInputs}";
