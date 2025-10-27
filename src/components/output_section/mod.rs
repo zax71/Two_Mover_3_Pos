@@ -1,7 +1,7 @@
 use egui::DragValue;
 
 use crate::{
-    app::GlobalState,
+    app::{self, GlobalState},
     components::output_section::{
         select_lights_modal::SelectLightsModal, select_path_modal::SelectPathModal,
     },
@@ -18,6 +18,7 @@ pub struct OutputSection {
     selected_output_type: OutputType,
     move_time: f64,
     frames: u16,
+    cue_number: u32,
 }
 
 #[derive(Debug, PartialEq)]
@@ -34,6 +35,7 @@ impl OutputSection {
             selected_output_type: OutputType::Instructions,
             move_time: 1.0,
             frames: 10,
+            cue_number: 1,
         }
     }
 
@@ -64,13 +66,18 @@ impl OutputSection {
 
             ui.horizontal(|ui| {
                 ui.label("Move time");
-                ui.add(DragValue::new(&mut self.move_time));
+                ui.add(DragValue::new(&mut self.move_time).speed(0.1));
                 ui.label("s");
             });
 
             ui.horizontal(|ui| {
                 ui.label("Frames");
                 ui.add(DragValue::new(&mut self.frames));
+            });
+
+            ui.horizontal(|ui| {
+                ui.label("Cue Number");
+                ui.add(DragValue::new(&mut self.cue_number));
             });
 
             egui::ComboBox::from_label("Output Type")
@@ -85,31 +92,56 @@ impl OutputSection {
                 });
 
             if ui.button("Execute move").clicked() {
-                let some_paths = self.select_path_modal.get_selected_path();
-                let lights = self.select_lights_modal.get_selected_lights();
+                self.execute_move(app_state);
+            }
 
-                let path = match some_paths {
-                    Some(path) => path,
-                    None => {
-                        app_state
-                            .toasts
-                            .warning("No path is selected - try selecting a path");
-                        return;
-                    }
-                };
+            // Ensure that move time is never negative. Time travel doesn't exist!
+            if self.move_time < 0.0 {
+                self.move_time = 0.0
+            }
 
-                if lights.is_empty() {
-                    app_state
-                        .toasts
-                        .warning("No lights are selected - try selecting some lights");
-                    return;
-                }
+            // If there are more than 99 frames then there's no way to number then in EOS with the current system I'm using.
+            if self.frames > 99 {
+                self.frames = 99
+            }
 
-                let frames =
-                    move_calculator::calculate_move(path, lights, self.frames, self.move_time);
+            // It makes no sense to have 0 frames
+            if self.frames < 1 {
+                self.frames = 1
+            }
 
-                println!("{:#?}", frames)
+            // There's no cue 0 in EOS
+            if self.cue_number == 0 {
+                self.cue_number = 1
             }
         });
+    }
+
+    fn execute_move(&self, app_state: &mut GlobalState) {
+        let some_paths = self.select_path_modal.get_selected_path();
+        let lights = self.select_lights_modal.get_selected_lights();
+
+        let path = match some_paths {
+            Some(path) => path,
+            None => {
+                app_state
+                    .toasts
+                    .warning("No path is selected - try selecting a path");
+                return;
+            }
+        };
+
+        if lights.is_empty() {
+            app_state
+                .toasts
+                .warning("No lights are selected - try selecting some lights");
+            return;
+        }
+
+        let frames = move_calculator::calculate_move(path, lights, self.frames, self.move_time);
+        println!("{:#?}", frames);
+        let commands = move_calculator::frames_to_commands(frames, self.cue_number);
+        // TODO: Remove this except
+        move_calculator::output_commands(commands, app_state).expect("Failed to output commands");
     }
 }

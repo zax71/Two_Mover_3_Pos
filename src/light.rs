@@ -13,9 +13,9 @@ pub struct Light {
 
 #[derive(Debug, PartialEq)]
 pub struct LightState {
-    pan: f64,
-    tilt: f64,
-    address: u16,
+    pub pan: f64,
+    pub tilt: f64,
+    pub address: u16,
 }
 
 impl IsDefault for Light {

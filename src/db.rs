@@ -2,7 +2,12 @@ use std::path::PathBuf;
 
 use crate::{
     light::Light,
-    path::{bezier::Bezier, cubic_bezier::CubicBezier, line::Line, PathEnum},
+    path::{
+        bezier::Bezier,
+        cubic_bezier::CubicBezier,
+        line::{self, Line},
+        PathEnum,
+    },
 };
 
 use std::sync::LazyLock;
@@ -80,6 +85,10 @@ impl Database {
     pub fn add_line(&self, line_to_add: &Line) -> Result<()> {
         if line_to_add.is_default() {
             bail!("Line has default values");
+        }
+
+        if line_to_add.name.is_default() {
+            bail!("Line has no name");
         }
 
         self.connection.execute(

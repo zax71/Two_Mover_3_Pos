@@ -1,6 +1,15 @@
+use std::{
+    net::{IpAddr, Ipv4Addr},
+    thread,
+    time::Duration,
+};
+
+use anyhow::Result;
+use eosc_rs::eos_desk::EosDesk;
 use percentage::Percentage;
 
 use crate::{
+    app::GlobalState,
     light::{Light, LightState},
     path::{Path, PathEnum},
 };
@@ -25,11 +34,12 @@ pub fn calculate_move(
         panic!("Lights must be passed into calculate_move, an empty vec was passed instead");
     }
 
-    let percent_per_frame = (1 / frames) as f64;
+    // Taking the reciprocal of the number of frames gives us how many percent per frame
+    let percent_per_frame: f64 = (frames as f64).recip();
     let mut out_frames: Vec<Frame> = vec![];
 
     // Loop over each frame...
-    for frame in 1..frames {
+    for frame in 0..frames {
         let mut current_frame = Frame {
             delay: move_time / (frames as f64),
             light_states: vec![],
@@ -47,4 +57,50 @@ pub fn calculate_move(
     }
 
     out_frames
+}
+
+/// Turns a Vec<Frame> in to a set of EOS commands, as a Vec<String>
+pub fn frames_to_commands(frames: Vec<Frame>, first_cue_number: u32) -> Vec<String> {
+    let mut out_commands: Vec<String> = vec![];
+    for (i, frame) in frames.iter().enumerate() {
+        for light_state in &frame.light_states {
+            out_commands.push(format!(
+                "{} Pan {:.4}",
+                light_state.address, light_state.pan
+            ));
+            out_commands.push(format!(
+                "{} Tilt {:.4}",
+                light_state.address, light_state.tilt
+            ));
+        }
+
+        // Storing as hundredths to stop floating point errors
+        let cue_number_thousanths: u32 = first_cue_number * 1000 + (i as u32);
+        let cue_number: String = format!(
+            "{}.{}",
+            cue_number_thousanths / 1000,
+            cue_number_thousanths % 1000
+        );
+
+        out_commands.push(format!("Record Cue {} Time {:.2}", cue_number, frame.delay));
+        out_commands.push(format!("Cue {} Follow {:.2}", cue_number, frame.delay));
+    }
+
+    out_commands
+}
+
+pub fn output_commands(commands: Vec<String>, _app_state: &mut GlobalState) -> Result<()> {
+    // TODO: Get OSC config from Database
+    let desk: EosDesk = EosDesk::new(
+        (IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 8001),
+        (IpAddr::V4(Ipv4Addr::new(192, 168, 122, 95)), 8000),
+    )?;
+
+    for command in commands {
+        desk.command(&command)?;
+        // Extremely cursed, please remove
+        thread::sleep(Duration::from_millis(20));
+    }
+
+    Ok(())
 }
