@@ -1,11 +1,10 @@
 use vector3d::Vector3d;
 
 use crate::{
-    app::{self, GlobalState},
+    app::GlobalState,
     components::{
         output_section::move_calculator, select_lights_modal::SelectLightsModal, select_vec,
     },
-    light::Light,
 };
 
 #[derive(Debug)]

@@ -95,14 +95,8 @@ impl OutputSection {
             }
 
             // If there are more than 99 frames then there's no way to number then in EOS with the current system I'm using.
-            if self.frames > 99 {
-                self.frames = 99
-            }
-
             // It makes no sense to have 0 frames
-            if self.frames < 1 {
-                self.frames = 1
-            }
+            self.frames = self.frames.clamp(1, 99);
 
             // There's no cue 0 in EOS
             if self.cue_number == 0 {

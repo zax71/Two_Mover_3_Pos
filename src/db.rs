@@ -2,12 +2,7 @@ use std::path::PathBuf;
 
 use crate::{
     light::Light,
-    path::{
-        bezier::Bezier,
-        cubic_bezier::CubicBezier,
-        line::{self, Line},
-        PathEnum,
-    },
+    path::{bezier::Bezier, cubic_bezier::CubicBezier, line::Line, PathEnum},
 };
 
 use std::sync::LazyLock;

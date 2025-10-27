@@ -38,8 +38,7 @@ impl Light {
 
         // Now some trig with those values to calculate the pan and tilt (in degrees)
         // Adding f64::MIN_POSITIVE to stop divide by zero errors
-        let mut pan =
-            (coordinate.x - self.coordinates.x).atan2d(&(coordinate.y - self.coordinates.y));
+        let pan = (coordinate.x - self.coordinates.x).atan2d(&(coordinate.y - self.coordinates.y));
         let tilt = -((distance_straight / distance_z + f64::MIN_POSITIVE).atand()); // * -1 as it is always -ve
 
         LightState {

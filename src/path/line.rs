@@ -1,6 +1,5 @@
 use crate::path::Path;
 use isx::prelude::IsDefault;
-use measurements::implement_display;
 use percentage::PercentageDecimal;
 use vector3d::Vector3d;
 
