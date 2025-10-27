@@ -68,6 +68,7 @@ jobs:
           args: -- -D warnings
 
   build:
+    needs: [test, check, fmt, clippy]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
