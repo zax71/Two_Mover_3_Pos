@@ -127,8 +127,8 @@ impl OutputSection {
         }
 
         let frames = move_calculator::calculate_move(path, lights, self.frames, self.move_time);
-        println!("{:#?}", frames);
         let commands = move_calculator::frames_to_commands(frames, self.cue_number);
+        //println!("{:#?}", commands);
         // TODO: Remove this except
         move_calculator::output_commands(commands, app_state).expect("Failed to output commands");
     }

@@ -47,11 +47,11 @@ pub fn calculate_move(
 
         // ...And for each frame point the current light at the right spot
         for light in &lights {
-            current_frame
-                .light_states
-                .push(light.point_at(path.point_at(&Percentage::from_decimal(
-                    percent_per_frame * (frame as f64),
-                ))));
+            let path_point = path.point_at(&Percentage::from_decimal(
+                percent_per_frame * (frame as f64),
+            ));
+            //println!("Pointing {} at {}", light.name, path_point);
+            current_frame.light_states.push(light.point_at(path_point));
         }
         out_frames.push(current_frame);
     }
@@ -67,13 +67,8 @@ pub fn frames_to_commands(frames: Vec<Frame>, first_cue_number: u32) -> Vec<Stri
             out_commands.append(&mut light_state.to_commands());
         }
 
-        // Storing as hundredths to stop floating point errors
-        let cue_number_thousanths: u32 = first_cue_number * 1000 + (i as u32);
-        let cue_number: String = format!(
-            "{}.{}",
-            cue_number_thousanths / 1000,
-            cue_number_thousanths % 1000
-        );
+        // {:0>2} left pads the number so there's always 2 digits, e.g: i=1 becomes 01 etc
+        let cue_number: String = format!("{}.{:0>2}", first_cue_number, i);
 
         out_commands.push(format!("Record Cue {} Time {:.2}", cue_number, frame.delay));
         out_commands.push(format!("Cue {} Follow {:.2}", cue_number, frame.delay));
@@ -92,7 +87,7 @@ pub fn output_commands(commands: Vec<String>, _app_state: &GlobalState) -> Resul
     for command in commands {
         desk.command(&command)?;
         // Extremely cursed, please remove
-        thread::sleep(Duration::from_millis(20));
+        thread::sleep(Duration::from_millis(10));
     }
 
     Ok(())

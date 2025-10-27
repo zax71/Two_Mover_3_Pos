@@ -49,7 +49,7 @@ impl DebugPointAt {
                         commands.append(&mut light.point_at(self.point).to_commands());
                     }
 
-                    println!("{:#?}", commands);
+                    //println!("{:#?}", commands);
                     let osc_result = move_calculator::output_commands(commands, app_state);
 
                     match osc_result {

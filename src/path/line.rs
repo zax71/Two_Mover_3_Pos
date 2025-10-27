@@ -18,7 +18,7 @@ impl IsDefault for Line {
 
 impl Path for Line {
     fn point_at(&self, index: &PercentageDecimal) -> Vector3d<f64> {
-        println!("Getting point at {} on line", index.value());
+        //println!("Getting point at {} on line", index.value());
         // See https://www.desmos.com/calculator/tiwsdtcsfy for a more readable version of this
         self.start + (self.end - self.start) * index.value()
     }
