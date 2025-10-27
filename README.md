@@ -7,10 +7,10 @@ A utility written in [Rust](https://www.rust-lang.org/) (yes, it's 🚀🚀🚀B
 The name came about from merging "EOS v**2** **mover** **3**D **pos**itioning"
 
 ## Roadmap
-- [ ] V1
+- [x] V1
   - Take in coordinates of mover & line
   - Export the numbers to manually type into the desk
-- [ ] V2
+- [x] V2
   - Automatically export cues to the desk using [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control)
 - [ ] V3
   - Import 3D splines to move lights along
