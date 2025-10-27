@@ -1,16 +1,10 @@
 use egui::DragValue;
 
-use crate::{
-    app::{self, GlobalState},
-    components::output_section::{
-        select_lights_modal::SelectLightsModal, select_path_modal::SelectPathModal,
-    },
-};
+use crate::app::GlobalState;
+use crate::components::select_lights_modal::SelectLightsModal;
+use crate::components::select_path_modal::SelectPathModal;
 
-mod move_calculator;
-mod select_lights_modal;
-mod select_path_modal;
-mod toggleable_item;
+pub mod move_calculator;
 
 pub struct OutputSection {
     select_lights_modal: SelectLightsModal,
@@ -30,7 +24,7 @@ enum OutputType {
 impl OutputSection {
     pub fn new() -> Self {
         Self {
-            select_lights_modal: SelectLightsModal::new(),
+            select_lights_modal: SelectLightsModal::new("Select lights for move"),
             select_path_modal: SelectPathModal::new(),
             selected_output_type: OutputType::Instructions,
             move_time: 1.0,

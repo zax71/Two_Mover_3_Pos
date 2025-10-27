@@ -64,14 +64,7 @@ pub fn frames_to_commands(frames: Vec<Frame>, first_cue_number: u32) -> Vec<Stri
     let mut out_commands: Vec<String> = vec![];
     for (i, frame) in frames.iter().enumerate() {
         for light_state in &frame.light_states {
-            out_commands.push(format!(
-                "{} Pan {:.4}",
-                light_state.address, light_state.pan
-            ));
-            out_commands.push(format!(
-                "{} Tilt {:.4}",
-                light_state.address, light_state.tilt
-            ));
+            out_commands.append(&mut light_state.to_commands());
         }
 
         // Storing as hundredths to stop floating point errors
@@ -89,7 +82,7 @@ pub fn frames_to_commands(frames: Vec<Frame>, first_cue_number: u32) -> Vec<Stri
     out_commands
 }
 
-pub fn output_commands(commands: Vec<String>, _app_state: &mut GlobalState) -> Result<()> {
+pub fn output_commands(commands: Vec<String>, _app_state: &GlobalState) -> Result<()> {
     // TODO: Get OSC config from Database
     let desk: EosDesk = EosDesk::new(
         (IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 8001),

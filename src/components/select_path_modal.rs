@@ -1,6 +1,6 @@
 use crate::{
     app::GlobalState,
-    components::output_section::toggleable_item::ToggleableItem,
+    components::toggleable_item::ToggleableItem,
     path::{Path, PathEnum},
 };
 

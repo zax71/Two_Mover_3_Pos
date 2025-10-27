@@ -2,7 +2,7 @@ use isx::prelude::IsDefault;
 use trig::Trig;
 use vector3d::Vector3d;
 
-#[derive(Default, PartialEq, Clone)]
+#[derive(Debug, Default, PartialEq, Clone)]
 pub struct Light {
     pub coordinates: Vector3d<f64>,
     pub minimum_beam: u16,
@@ -42,17 +42,20 @@ impl Light {
             (coordinate.x - self.coordinates.x).atan2d(&(coordinate.y - self.coordinates.y));
         let tilt = -((distance_straight / distance_z + f64::MIN_POSITIVE).atand()); // * -1 as it is always -ve
 
-        // The pan can be -ve and when that occurs it is taking the reading anticlockwise. Let's add 180 to the positive version of the pan to fix it
-        if pan < 0.0 {
-            pan *= -1.0; // make positive
-            pan += 180.0;
-        }
-
         LightState {
             pan,
             tilt,
             address: self.address,
         }
+    }
+}
+
+impl LightState {
+    pub fn to_commands(&self) -> Vec<String> {
+        vec![
+            format!("{} Pan {:.4}", self.address, self.pan),
+            format!("{} Tilt {:.4}", self.address, self.tilt),
+        ]
     }
 }
 
@@ -154,7 +157,7 @@ mod tests {
         };
 
         let out_light_state = LightState {
-            pan: 315.0,
+            pan: -135.0,
             tilt: 54.7356103172,
             address: 5,
         };
@@ -183,7 +186,7 @@ mod tests {
         };
 
         let out_light_state = LightState {
-            pan: 321.340191746,
+            pan: -141.340191746,
             tilt: 8.59773680459,
             address: 5,
         };

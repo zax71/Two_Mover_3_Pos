@@ -1,17 +1,18 @@
-use crate::{
-    app::GlobalState, components::output_section::toggleable_item::ToggleableItem, light::Light,
-};
+use crate::{app::GlobalState, components::toggleable_item::ToggleableItem, light::Light};
 
+#[derive(Debug)]
 pub struct SelectLightsModal {
     pub shown: bool,
-    pub toggleable_lights: Vec<ToggleableItem<Light>>,
+    toggleable_lights: Vec<ToggleableItem<Light>>,
+    pub title: String,
 }
 
 impl SelectLightsModal {
-    pub fn new() -> Self {
+    pub fn new(title: &str) -> Self {
         Self {
             shown: false,
             toggleable_lights: Vec::default(),
+            title: title.to_string(),
         }
     }
 
@@ -62,7 +63,7 @@ impl SelectLightsModal {
 
     /// Draw the select lights modal to the UI - called every frame
     pub fn add(&mut self, ctx: &egui::Context) {
-        egui::Window::new("Select Lights")
+        egui::Window::new(self.title.clone())
             .collapsible(false)
             .resizable(true)
             .fade_in(true)

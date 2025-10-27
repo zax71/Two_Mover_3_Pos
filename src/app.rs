@@ -6,6 +6,7 @@ use crate::components::add_light_window::AddLightWindow;
 use crate::components::add_path::add_bezier::AddBezierWindow;
 use crate::components::add_path::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_path::add_line_window::AddLineWindow;
+use crate::components::debug_point_at::DebugPointAt;
 use crate::components::output_section::OutputSection;
 use crate::db::Database;
 
@@ -35,6 +36,7 @@ pub struct App {
     add_line_window: AddLineWindow,
     add_bezier_window: AddBezierWindow,
     add_cubic_bezier_window: AddCubicBezierWindow,
+    debug_point_at: DebugPointAt,
     output_section: OutputSection,
     global_state: GlobalState,
 }
@@ -48,6 +50,7 @@ impl Default for App {
             add_line_window: AddLineWindow::new(),
             add_bezier_window: AddBezierWindow::new(),
             add_cubic_bezier_window: AddCubicBezierWindow::new(),
+            debug_point_at: DebugPointAt::new(),
             output_section: OutputSection::new(),
             global_state,
         }
@@ -66,6 +69,13 @@ impl App {
                 if ui.button("Quit").clicked() {
                     ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
                 }
+
+                ui.menu_button("Debug", |ui| {
+                    if ui.button("Light point at").clicked() {
+                        self.debug_point_at.shown = true;
+                        ui.close();
+                    }
+                })
             });
 
             ui.menu_button("Theme", |ui| {
@@ -109,6 +119,7 @@ impl eframe::App for App {
         self.add_bezier_window.add(ctx, &mut self.global_state);
         self.add_cubic_bezier_window
             .add(ctx, &mut self.global_state);
+        self.debug_point_at.add(ctx, &mut self.global_state);
 
         // Show toasts
         self.global_state.toasts.show(ctx);
