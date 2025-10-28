@@ -15,7 +15,6 @@ use crate::{
 };
 
 #[derive(Debug)]
-#[allow(dead_code)] // TODO: Probably not needed in the long run
 pub struct Frame {
     delay: f64,
     light_states: Vec<LightState>,
