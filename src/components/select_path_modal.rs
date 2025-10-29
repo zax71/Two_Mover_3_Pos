@@ -58,7 +58,7 @@ impl SelectPathModal {
             }
         }
 
-        return None;
+        None
     }
 
     /// This function will modify current_paths so that it only has one selected - preferring the newer of the two items if there are two items selected
