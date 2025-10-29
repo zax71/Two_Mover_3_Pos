@@ -52,15 +52,13 @@ impl SelectPathModal {
 
     /// Returns the currently selected path. If none are selected then the Option value will be None.
     pub fn get_selected_path(&self) -> Option<PathEnum> {
-        let mut path: Option<PathEnum> = None;
         for current_path in &self.toggleable_paths {
             if current_path.state {
-                path = Some(current_path.unwrap());
-                break;
+                return Some(current_path.unwrap());
             }
         }
 
-        path
+        return None;
     }
 
     /// This function will modify current_paths so that it only has one selected - preferring the newer of the two items if there are two items selected
