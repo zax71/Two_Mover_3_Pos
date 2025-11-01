@@ -108,7 +108,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: -- -D warnings
+          args: --release
 
       - name: Rename
         run: cp target/${{ matrix.TARGET }}/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
