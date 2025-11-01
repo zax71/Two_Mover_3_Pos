@@ -111,7 +111,7 @@ jobs:
           args: --release
 
       - name: Rename
-        run: cp target/${{ matrix.TARGET }}/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
+        run: cp target/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
 
       - uses: actions/upload-artifact@master
         with:
