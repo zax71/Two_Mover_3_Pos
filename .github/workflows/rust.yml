@@ -91,9 +91,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install egui dependencies
-        run: sudo apt install -y libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
-
       - name: Get Cargo.toml Metadata
         id: metadata
         uses: nicolaiunrein/cargo-get@master
