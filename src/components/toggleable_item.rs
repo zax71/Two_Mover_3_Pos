@@ -11,14 +11,16 @@ impl<T: PartialEq> PartialEq for ToggleableItem<T> {
     }
 }
 
-impl<T: Clone> ToggleableItem<T> {
-    pub fn from_item(item: &T) -> Self {
+impl<T> From<T> for ToggleableItem<T> {
+    fn from(value: T) -> Self {
         Self {
-            item: item.clone(),
+            item: value,
             state: false,
         }
     }
+}
 
+impl<T: Clone> ToggleableItem<T> {
     /// Gets the item out of the ToggleableItem<T> and clones it
     pub fn unwrap(&self) -> T {
         self.item.clone()

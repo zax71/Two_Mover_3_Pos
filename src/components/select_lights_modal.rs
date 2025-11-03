@@ -27,7 +27,7 @@ impl SelectLightsModal {
         };
 
         let new_toggleable_lights: Vec<ToggleableItem<Light>> =
-            lights.iter().map(ToggleableItem::from_item).collect();
+            lights.into_iter().map(ToggleableItem::from).collect();
 
         // Delete lights that have been removed from the Vec
         for (i, light) in self.toggleable_lights.clone().into_iter().enumerate() {

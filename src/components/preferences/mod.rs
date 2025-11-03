@@ -5,7 +5,7 @@ use crate::{
     app::GlobalState,
     components::{
         preferences::{osc_preferences::OscPreferences, theme_preferences::ThemePreferences},
-        toggleable_item::{self, ToggleableItem},
+        toggleable_item::ToggleableItem,
     },
     only_one_radio::only_one_toggleable_item,
 };
@@ -38,12 +38,8 @@ impl Preferences {
         Self {
             shown: false,
             preference_items: vec![
-                ToggleableItem::from_item(&PreferenceItemEnum::OscPreferences(
-                    OscPreferences::new(),
-                )),
-                ToggleableItem::from_item(&PreferenceItemEnum::ThemePreferences(
-                    ThemePreferences::new(),
-                )),
+                ToggleableItem::from(PreferenceItemEnum::OscPreferences(OscPreferences::new())),
+                ToggleableItem::from(PreferenceItemEnum::ThemePreferences(ThemePreferences::new())),
             ],
         }
     }

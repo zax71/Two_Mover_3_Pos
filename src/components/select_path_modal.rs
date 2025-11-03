@@ -30,7 +30,7 @@ impl SelectPathModal {
 
         //Turn the Vec<PathEnum> into Vec<ToggleableItem<PathEnum>>
         let new_toggleable_paths: Vec<ToggleableItem<PathEnum>> =
-            paths.iter().map(ToggleableItem::from_item).collect();
+            paths.into_iter().map(ToggleableItem::from).collect();
 
         // Delete paths that have been removed from the Vec
         for (i, path) in self.toggleable_paths.clone().into_iter().enumerate() {
