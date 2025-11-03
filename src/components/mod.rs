@@ -5,6 +5,7 @@ pub mod add_light_window;
 pub mod add_path;
 pub mod debug_point_at;
 pub mod output_section;
+pub mod preferences;
 pub mod select_lights_modal;
 pub mod select_path_modal;
 pub mod toggleable_item;

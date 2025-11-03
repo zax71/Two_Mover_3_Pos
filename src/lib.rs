@@ -4,6 +4,7 @@ mod app;
 mod components;
 mod db;
 mod light;
+mod only_one_radio;
 mod path;
 
 pub use app::App;

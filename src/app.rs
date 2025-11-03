@@ -8,6 +8,7 @@ use crate::components::add_path::add_cubic_bezier::AddCubicBezierWindow;
 use crate::components::add_path::add_line_window::AddLineWindow;
 use crate::components::debug_point_at::DebugPointAt;
 use crate::components::output_section::OutputSection;
+use crate::components::preferences::Preferences;
 use crate::db::Database;
 
 pub struct GlobalState {
@@ -38,6 +39,7 @@ pub struct App {
     add_cubic_bezier_window: AddCubicBezierWindow,
     debug_point_at: DebugPointAt,
     output_section: OutputSection,
+    preferences: Preferences,
     global_state: GlobalState,
 }
 impl Default for App {
@@ -52,6 +54,7 @@ impl Default for App {
             add_cubic_bezier_window: AddCubicBezierWindow::new(),
             debug_point_at: DebugPointAt::new(),
             output_section: OutputSection::new(),
+            preferences: Preferences::new(),
             global_state,
         }
     }
@@ -76,6 +79,13 @@ impl App {
                         ui.close();
                     }
                 })
+            });
+
+            ui.menu_button("Edit", |ui| {
+                if ui.button("Preferences").clicked() {
+                    self.preferences.shown = true;
+                    ui.close();
+                }
             });
 
             ui.menu_button("Theme", |ui| {
@@ -120,6 +130,7 @@ impl eframe::App for App {
         self.add_cubic_bezier_window
             .add(ctx, &mut self.global_state);
         self.debug_point_at.add(ctx, &mut self.global_state);
+        self.preferences.add(ctx, &mut self.global_state);
 
         // Show toasts
         self.global_state.toasts.show(ctx);
