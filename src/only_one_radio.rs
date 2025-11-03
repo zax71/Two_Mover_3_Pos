@@ -57,10 +57,10 @@ mod tests {
     #[test]
     fn test_radio_zero_previous_true() {
         let previous_state = vec![
-            ToggleableItem::from_item(&1),
-            ToggleableItem::from_item(&2),
-            ToggleableItem::from_item(&3),
-            ToggleableItem::from_item(&4),
+            ToggleableItem::from(1),
+            ToggleableItem::from(2),
+            ToggleableItem::from(3),
+            ToggleableItem::from(4),
         ];
 
         let mut current_state = previous_state.clone();
@@ -72,10 +72,10 @@ mod tests {
     #[test]
     fn test_radio_one_previous_true() {
         let mut previous_state = vec![
-            ToggleableItem::from_item(&1),
-            ToggleableItem::from_item(&2),
-            ToggleableItem::from_item(&3),
-            ToggleableItem::from_item(&4),
+            ToggleableItem::from(1),
+            ToggleableItem::from(2),
+            ToggleableItem::from(3),
+            ToggleableItem::from(4),
         ];
 
         previous_state[0].state = true;
@@ -89,10 +89,10 @@ mod tests {
     #[test]
     fn test_radio_one_previous_true_two_current_true() {
         let mut previous_state = vec![
-            ToggleableItem::from_item(&1),
-            ToggleableItem::from_item(&2),
-            ToggleableItem::from_item(&3),
-            ToggleableItem::from_item(&4),
+            ToggleableItem::from(1),
+            ToggleableItem::from(2),
+            ToggleableItem::from(3),
+            ToggleableItem::from(4),
         ];
 
         previous_state[0].state = true;
@@ -101,10 +101,10 @@ mod tests {
         current_state[2].state = true;
 
         let mut expected_state = vec![
-            ToggleableItem::from_item(&1),
-            ToggleableItem::from_item(&2),
-            ToggleableItem::from_item(&3),
-            ToggleableItem::from_item(&4),
+            ToggleableItem::from(1),
+            ToggleableItem::from(2),
+            ToggleableItem::from(3),
+            ToggleableItem::from(4),
         ];
         expected_state[2].state = true;
 
