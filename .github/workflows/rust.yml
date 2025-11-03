@@ -78,10 +78,6 @@ jobs:
             os: ubuntu-latest
             TARGET: x86_64-unknown-linux-musl
 
-          - os-name: Ubuntu latest ARM
-            os: ubuntu-latest
-            TARGET: aarch64-unknown-linux-musl
-
           - os-name: Windows latest x86
             os: windows-latest
             TARGET: x86_64-pc-windows-msvc
@@ -94,6 +90,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install egui dependencies
+        run: sudo apt install -y libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
 
       - name: Get Cargo.toml Metadata
         id: metadata
