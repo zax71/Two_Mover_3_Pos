@@ -103,6 +103,8 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
+      - run: apt install musl-tools
+
       - run: cargo build --target ${{ matrix.TARGET }} --release
 
       - name: Rename
