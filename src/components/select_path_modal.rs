@@ -1,7 +1,7 @@
 use crate::{
     app::GlobalState,
     components::toggleable_item::ToggleableItem,
-    only_one_radio::only_one_toggleable_item,
+    only_one_toggleable_item::only_one_toggleable_item,
     path::{Path, PathEnum},
 };
 

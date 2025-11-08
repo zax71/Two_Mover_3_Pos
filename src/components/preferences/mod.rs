@@ -7,7 +7,7 @@ use crate::{
         preferences::{osc_preferences::OscPreferences, theme_preferences::ThemePreferences},
         toggleable_item::ToggleableItem,
     },
-    only_one_radio::only_one_toggleable_item,
+    only_one_toggleable_item::only_one_toggleable_item,
 };
 
 pub mod osc_preferences;
