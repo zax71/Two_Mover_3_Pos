@@ -1,4 +1,4 @@
-use std::net::{IpAddr, Ipv4Addr};
+use std::net::Ipv4Addr;
 
 use egui::DragValue;
 
@@ -20,7 +20,7 @@ impl OscPreferences {
 }
 
 impl PreferenceItem for OscPreferences {
-    fn show(&mut self, ui: &mut egui::Ui, global_state: &mut crate::app::GlobalState) {
+    fn show(&mut self, ui: &mut egui::Ui, _global_state: &mut crate::app::GlobalState) {
         ui.vertical(|ui| {
             select_ip_port(ui, "Host", &mut self.host);
             select_ip_port(ui, "Desk", &mut self.desk);
