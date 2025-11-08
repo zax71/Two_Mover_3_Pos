@@ -108,7 +108,7 @@ jobs:
       - run: CC_x86_64_unknown_linux_musl=x86_64-linux-musl-gcc cargo build --target ${{ matrix.TARGET }} --release
 
       - name: Rename
-        run: cp target/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
+        run: cp target/${{ matrix.TARGET }}/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
 
       - uses: actions/upload-artifact@master
         with:
