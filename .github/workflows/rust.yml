@@ -103,7 +103,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      - run: apt install musl-tools
+      - run: sudo apt install musl-tools
 
       - run: CC_x86_64_unknown_linux_musl=x86_64-linux-musl-gcc cargo build --target ${{ matrix.TARGET }} --release
 
