@@ -1,6 +1,7 @@
 use std::fs;
 
 use egui_notify::Toasts;
+use measurements::data;
 
 use crate::components::add_light_window::AddLightWindow;
 use crate::components::add_path::add_bezier::AddBezierWindow;
@@ -9,24 +10,33 @@ use crate::components::add_path::add_line_window::AddLineWindow;
 use crate::components::debug_point_at::DebugPointAt;
 use crate::components::output_section::OutputSection;
 use crate::components::preferences::Preferences;
+use crate::config::ConfigFile;
 use crate::db::Database;
 
 pub struct GlobalState {
     pub database: Database,
+    pub config_file: ConfigFile,
     pub toasts: Toasts,
 }
 
 impl Default for GlobalState {
     fn default() -> Self {
-        let mut db_path = dirs::data_dir().expect("Could not find OS data directory");
-        db_path.push("two_mover_3_pos");
+        let mut data_path = dirs::data_dir().expect("Could not find OS data directory");
+        data_path.push("two_mover_3_pos");
 
-        fs::create_dir_all(&db_path).expect("Failed to create directories for database");
+        fs::create_dir_all(&data_path).expect("Failed to create directories for database");
 
+        let mut db_path = data_path.clone();
         db_path.push("database");
         db_path.set_extension("db");
+
+        let mut config_path = data_path.clone();
+        config_path.push("config");
+        config_path.set_extension("toml");
         Self {
             database: Database::new(db_path),
+            config_file: ConfigFile::new(config_path)
+                .expect("Failed to create and/or read config file"),
             toasts: Toasts::default(),
         }
     }
@@ -83,7 +93,7 @@ impl App {
 
             ui.menu_button("Edit", |ui| {
                 if ui.button("Preferences").clicked() {
-                    self.preferences.shown = true;
+                    self.preferences.show(&mut self.global_state);
                     ui.close();
                 }
             });

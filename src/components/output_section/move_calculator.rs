@@ -9,7 +9,7 @@ use eosc_rs::eos_desk::EosDesk;
 use percentage::Percentage;
 
 use crate::{
-    app::GlobalState,
+    app::{self, GlobalState},
     light::{Light, LightState},
     path::{Path, PathEnum},
 };
@@ -76,16 +76,17 @@ pub fn frames_to_commands(frames: Vec<Frame>, first_cue_number: u32) -> Vec<Stri
     out_commands
 }
 
-pub fn output_commands(commands: Vec<String>, _app_state: &GlobalState) -> Result<()> {
-    // TODO: Get OSC config from Database
+pub fn output_commands(commands: Vec<String>, app_state: &mut GlobalState) -> Result<()> {
+    // Get the IP addresses from config
+    let config = app_state.config_file.read()?.osc;
     let desk: EosDesk = EosDesk::new(
-        (IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 8001),
-        (IpAddr::V4(Ipv4Addr::new(192, 168, 122, 95)), 8000),
+        (IpAddr::V4(config.host.0), config.host.1),
+        (IpAddr::V4(config.desk.0), config.desk.1),
     )?;
 
     for command in commands {
         desk.command(&command)?;
-        // Extremely cursed, please remove
+        // TODO: Extremely cursed, please remove
         thread::sleep(Duration::from_millis(10));
     }
 

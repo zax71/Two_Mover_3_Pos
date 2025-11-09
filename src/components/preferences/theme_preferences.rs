@@ -16,6 +16,10 @@ impl PreferenceItem for ThemePreferences {
     }
 
     fn name(&self) -> &str {
-        "Theme"
+        "☀ Theme"
+    }
+
+    fn update(&mut self, _global_state: &mut crate::app::GlobalState) {
+        return;
     }
 }

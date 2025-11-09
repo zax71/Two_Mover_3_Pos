@@ -1,6 +1,6 @@
 use egui::DragValue;
 
-use crate::app::GlobalState;
+use crate::app::{self, GlobalState};
 use crate::components::select_lights_modal::SelectLightsModal;
 use crate::components::select_path_modal::SelectPathModal;
 
@@ -130,6 +130,13 @@ impl OutputSection {
         let commands = move_calculator::frames_to_commands(frames, self.cue_number);
         //println!("{:#?}", commands);
         // TODO: Remove this except
-        move_calculator::output_commands(commands, app_state).expect("Failed to output commands");
+        match move_calculator::output_commands(commands, app_state) {
+            Ok(_) => {}
+            Err(e) => {
+                app_state
+                    .toasts
+                    .error(format!("Failed to output commands over OSC: {e}"));
+            }
+        }
     }
 }

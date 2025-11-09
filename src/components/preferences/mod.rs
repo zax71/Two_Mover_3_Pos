@@ -24,12 +24,13 @@ pub enum PreferenceItemEnum {
 #[enum_dispatch(PreferenceItemEnum)]
 pub trait PreferenceItem {
     fn show(&mut self, ui: &mut egui::Ui, global_state: &mut GlobalState);
+    fn update(&mut self, global_state: &mut crate::app::GlobalState);
     fn name(&self) -> &str;
 }
 
 #[derive(Debug, Default)]
 pub struct Preferences {
-    pub shown: bool,
+    shown: bool,
     preference_items: Vec<ToggleableItem<PreferenceItemEnum>>,
 }
 
@@ -38,11 +39,20 @@ impl Preferences {
         Self {
             shown: false,
             preference_items: vec![
-                ToggleableItem::from(PreferenceItemEnum::OscPreferences(OscPreferences::new())),
+                ToggleableItem::from(PreferenceItemEnum::OscPreferences(OscPreferences::default())),
                 ToggleableItem::from(PreferenceItemEnum::ThemePreferences(ThemePreferences::new())),
             ],
         }
     }
+
+    /// Shows this UI element & updates internal state
+    pub fn show(&mut self, global_state: &mut GlobalState) {
+        self.shown = true;
+        for preference_item in &mut self.preference_items {
+            preference_item.item.update(global_state);
+        }
+    }
+
     pub fn add(&mut self, ctx: &egui::Context, global_state: &mut GlobalState) {
         let mut open = self.shown;
         egui::Window::new("Preferences")
@@ -61,8 +71,13 @@ impl Preferences {
                     // I'm using .show_inside() instead of .show() to draw this in something other than the root window
                     .show_inside(ui, |ui| self.sidebar_content(ui));
 
-                for preference_item in &mut self.preference_items {
+                for (i, preference_item) in self.preference_items.iter_mut().enumerate() {
                     if preference_item.state {
+                        // Update state in preference item if this is first time opening it. Not doing each frame due to file I/O
+                        if old_preferences[i].state == false {
+                            println!("First time opening");
+                            preference_item.item.update(global_state);
+                        }
                         preference_item.item.show(ui, global_state);
                     }
                 }

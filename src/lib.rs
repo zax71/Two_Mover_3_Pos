@@ -2,6 +2,7 @@
 
 mod app;
 mod components;
+mod config;
 mod db;
 mod light;
 mod only_one_toggleable_item;
