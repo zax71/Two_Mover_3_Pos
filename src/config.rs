@@ -1,6 +1,6 @@
 use std::{
     fs::{self, OpenOptions},
-    io::{Read, Write},
+    io::{Read, Seek, SeekFrom, Write},
     path::PathBuf,
 };
 
@@ -25,6 +25,7 @@ impl ConfigFile {
     pub fn new(path: PathBuf) -> Result<Self> {
         let mut file = OpenOptions::new()
             .create(true)
+            .truncate(true)
             .read(true)
             .write(true)
             .open(&path)?;
@@ -32,8 +33,7 @@ impl ConfigFile {
         // If there is no config file yet, write default values to it
         if file.metadata()?.len() == 0 {
             file.write_all(toml::to_string_pretty(&Config::default())?.as_bytes())?;
-            // Wait for metadata to be written to disk
-            file.sync_all()?;
+            file.seek(SeekFrom::Start(0))?;
         }
 
         // Get file contents

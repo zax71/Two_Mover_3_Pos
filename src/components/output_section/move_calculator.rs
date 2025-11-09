@@ -1,15 +1,11 @@
-use std::{
-    net::{IpAddr, Ipv4Addr},
-    thread,
-    time::Duration,
-};
+use std::{net::IpAddr, thread, time::Duration};
 
 use anyhow::Result;
 use eosc_rs::eos_desk::EosDesk;
 use percentage::Percentage;
 
 use crate::{
-    app::{self, GlobalState},
+    app::GlobalState,
     light::{Light, LightState},
     path::{Path, PathEnum},
 };
@@ -49,7 +45,6 @@ pub fn calculate_move(
             let path_point = path.point_at(&Percentage::from_decimal(
                 percent_per_frame * (frame as f64),
             ));
-            //println!("Pointing {} at {}", light.name, path_point);
             current_frame.light_states.push(light.point_at(path_point));
         }
         out_frames.push(current_frame);

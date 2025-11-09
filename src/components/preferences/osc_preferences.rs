@@ -33,7 +33,7 @@ impl PreferenceItem for OscPreferences {
                 Ok(_) => {
                     global_state
                         .toasts
-                        .success(format!("Successfully changed OSC addresses!"));
+                        .success("Successfully changed OSC addresses!");
                 }
                 Err(e) => {
                     global_state
@@ -51,7 +51,6 @@ impl PreferenceItem for OscPreferences {
     /// To be called before opening this UI element to update it's data with the config file.
     /// Causes file IO so do **not** call on every frame
     fn update(&mut self, global_state: &mut crate::app::GlobalState) {
-        println!("Updating OSC preferences state");
         let config = global_state.config_file.read();
 
         match config {

@@ -19,7 +19,5 @@ impl PreferenceItem for ThemePreferences {
         "☀ Theme"
     }
 
-    fn update(&mut self, _global_state: &mut crate::app::GlobalState) {
-        return;
-    }
+    fn update(&mut self, _global_state: &mut crate::app::GlobalState) {}
 }

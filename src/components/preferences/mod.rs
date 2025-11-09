@@ -74,8 +74,7 @@ impl Preferences {
                 for (i, preference_item) in self.preference_items.iter_mut().enumerate() {
                     if preference_item.state {
                         // Update state in preference item if this is first time opening it. Not doing each frame due to file I/O
-                        if old_preferences[i].state == false {
-                            println!("First time opening");
+                        if !old_preferences[i].state {
                             preference_item.item.update(global_state);
                         }
                         preference_item.item.show(ui, global_state);
