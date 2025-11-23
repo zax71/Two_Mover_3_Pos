@@ -15,11 +15,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --all-features
+
+      - name: Run check
+        run: cargo check --all-features
 
   test:
     name: Test Suite
@@ -29,12 +29,12 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+
       - uses: Swatinem/rust-cache@v2
+
       - run: sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --lib
+      - name: Run test
+        run: cargo test --lib
 
   fmt:
     name: Rustfmt
@@ -45,48 +45,64 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt
+
       - uses: Swatinem/rust-cache@v2
 
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+      - name: Run rustfmt
+        run: cargo fmt --all -- --check
 
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
           components: clippy
+
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+
+      - name: Run clippy
+        run: cargo clippy -- -D warnings
 
   build:
-    needs: [test, check, fmt, clippy]
-    runs-on: ${{ matrix.os }}
+    name: Build - ${{ matrix.platform.os-name }}
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - os-name: Ubuntu latest x86
-            os: ubuntu-latest
-            TARGET: x86_64-unknown-linux-musl
+        platform:
+          - os-name: FreeBSD-x86_64
+            runs-on: ubuntu-22.04
+            target: x86_64-unknown-freebsd
+            container: hkprog/build-essential:ubuntu-21.04
 
-          - os-name: Windows latest x86
-            os: windows-latest
-            TARGET: x86_64-pc-windows-msvc
-            EXTENSION: .exe
+          - os-name: Linux-x86_64
+            runs-on: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
 
-          - os-name: MacOS latest ARM
-            os: macos-latest
-            TARGET: aarch64-apple-darwin
+          - os-name: Linux-aarch64
+            runs-on: ubuntu-22.04
+            target: aarch64-unknown-linux-musl
 
+          - os-name: Linux-riscv64
+            runs-on: ubuntu-22.04
+            target: riscv64gc-unknown-linux-gnu
+
+          - os-name: Windows-x86_64
+            runs-on: windows-latest
+            target: x86_64-pc-windows-msvc
+            extension: .exe
+
+          - os-name: macOS-x86_64
+            runs-on: macOS-latest
+            target: x86_64-apple-darwin
+
+          - os-name: macOS-aarch64
+            runs-on: macOS-latest
+            target: aarch64-apple-darwin
+
+    runs-on: ${{ matrix.platform.runs-on }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,22 +111,15 @@ jobs:
         id: metadata
         uses: nicolaiunrein/cargo-get@master
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v1
         with:
-          toolchain: stable
-          components: clippy
-          targets: ${{ matrix.TARGET }}
-
-      - uses: Swatinem/rust-cache@v2
-
-      - run: sudo apt install musl-tools libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
-
-      - run: CC_x86_64_unknown_linux_musl=x86_64-linux-musl-gcc cargo build --target ${{ matrix.TARGET }} --release
-
-      - name: Rename
-        run: cp target/${{ matrix.TARGET }}/release/${{ steps.metadata.outputs.package_name}}${{ matrix.EXTENSION }} ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
+          command: build
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release"
+          strip: true
 
       - uses: actions/upload-artifact@master
         with:
-          name: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
-          path: ${{ steps.metadata.outputs.package_name}}-${{ matrix.TARGET }}${{ matrix.EXTENSION }}
+          name: ${{ steps.metadata.outputs.package_name}}-${{ matrix.platform.target }}${{ matrix.platform.extension }}
+          path: target/${{ matrix.platform.target }}/release/${{ steps.metadata.outputs.package_name}}${{ matrix.platform.extension }}
