@@ -24,8 +24,8 @@ You can run this project just like any other Rust project with
 cargo run
 ```
 
-### Dependancies
-[egui has some depndancies](https://github.com/emilk/egui?tab=readme-ov-file#demo), here's how to install them:
+### Dependencies
+[egui has some dependencies](https://github.com/emilk/egui?tab=readme-ov-file#demo), here's how to install them:
 
 Debian:
 ```
